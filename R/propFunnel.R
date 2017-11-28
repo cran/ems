@@ -4,7 +4,7 @@
 
 
 
-propFunnel <- function(unit, o, n, theta, p = c(.95,.998), method = c("exact","normal"), ..., printUnits = FALSE, ylab = "%", xlab = "Volume", ylim = c(0, min(upperCI[[which(p == max(p))]]) + 2.5*theta), xlim = c(0, max(n)), myunits = NULL, overdispersion = FALSE, digits = 5){
+propFunnel <- function(unit, o, n, theta, p = c(.95,.998), method = c("exact","normal"), ..., printUnits = FALSE, ylab = "%", xlab = "Volume", ylim = c(0, min(upperCI[[which(p == max(p))]]) + 2.5*theta), xlim = c(0, max(n)), myunits = NULL, digits = 5, overdispersion){
 
   if(!is.factor(unit)){stop("Unit must be a factor.")}
   if(!is.numeric(n)){stop("n must be numeric.")}
@@ -41,11 +41,29 @@ propFunnel <- function(unit, o, n, theta, p = c(.95,.998), method = c("exact","n
 
   prop.table <- data.frame(unit, y, o, n)
   prop.table <- prop.table[order(prop.table$n),]
+
+  # Calculate the z-score
+  z_score <- (y - theta) * sqrt( n / gdetheta)
+
+  # Calculate the 10% and 90% percentiles.
+  q90 <- quantile(z_score,probs=c(0.9))
+  q10 <- quantile(z_score,probs=c(0.1))
+
+  # Set z-scores larger than the 90% percentile to the 90% percentile.
+  z_score <- ifelse(z_score>q90,q90,z_score)
+
+  # Set z-scores smaller than the 10% percentile to the 10% percentile.
+  z_score <- ifelse(z_score<q10,q10,z_score)
+
+  # Calculate the Winsorised estimate
+  # Used when overdispersion of the indicator
+  phi <- (1 / nrow(prop.table)) * sum(z_score ^ 2)
+
   if (length(exc) > 0){
-   prop.table <- prop.table[-which(prop.table$unit %in% exc),]
-   if (any(myunits %in% exc)){
-     myunits <- myunits[-which(myunits %in% exc)]
-   }
+    prop.table <- prop.table[-which(prop.table$unit %in% exc),]
+    if (any(myunits %in% exc)){
+      myunits <- myunits[-which(myunits %in% exc)]
+    }
   }
   unitnames <- data.frame(Unit = prop.table$unit)
   admissionsRange <- seq(1,max(n))
@@ -68,31 +86,43 @@ propFunnel <- function(unit, o, n, theta, p = c(.95,.998), method = c("exact","n
       prop.table <- cbind(prop.table, outofcontrol[[i]])
     }
   } else { # using normal approximation
-     if (overdispersion){
-       phi <- (1/nrow(prop.table)) * sum(((y - theta) ^ 2 * n)/(gdetheta))
-       for (i in 1:length(p)){
+
+    if (overdispersion){
+      if (phi > (1 + 2 * sqrt( 2 / nrow(prop.table) ))){ # overdispersion = TRUE
+      # phi <- (1/nrow(prop.table)) * sum(((y - theta) ^ 2 * (n/gdetheta)))
+       warning("The funnel limits were inflated due overdispersion presence.")
+
+      for (i in 1:length(p)){
         zp <- qnorm(1 - (1 - p[i]) / 2)
         upperCI[[i]] <- theta + zp * sqrt(gdetheta * phi / admissionsRange)
         lowerCI[[i]] <- theta - zp * sqrt(gdetheta * phi / admissionsRange)
-       }
-     } else {
-    for (i in 1:length(p)){
-      zp <- qnorm(1 - (1 - p[i]) / 2)
-      upperCI[[i]] <- theta + zp * sqrt(gdetheta / admissionsRange)
-      lowerCI[[i]] <- theta - zp * sqrt(gdetheta / admissionsRange)
-      ylowCI[[i]] <- lowerCI[[i]][which(admissionsRange %in% prop.table$n == TRUE)]
-      yuppCI[[i]] <- upperCI[[i]][which(admissionsRange %in% prop.table$n == TRUE)]
-      lowOUT[[i]] <- ifelse(prop.table$y < ylowCI[[i]],TRUE,FALSE)
-      uppOUT[[i]]<- ifelse(prop.table$y > yuppCI[[i]], TRUE, FALSE)
-      outofcontrol[[i]] <- ifelse(lowOUT[[i]] == TRUE | uppOUT[[i]] == TRUE, "OUT","-")
-      outcolname[i] <- paste0(p[i]*100,"%CI")
-      prop.table <- cbind(prop.table, outofcontrol[[i]])
+        ylowCI[[i]] <- lowerCI[[i]][which(admissionsRange %in% prop.table$n == TRUE)]
+        yuppCI[[i]] <- upperCI[[i]][which(admissionsRange %in% prop.table$n == TRUE)]
+        lowOUT[[i]] <- ifelse(prop.table$y < ylowCI[[i]],TRUE,FALSE)
+        uppOUT[[i]]<- ifelse(prop.table$y > yuppCI[[i]], TRUE, FALSE)
+        outofcontrol[[i]] <- ifelse(lowOUT[[i]] == TRUE | uppOUT[[i]] == TRUE, "OUT","-")
+        outcolname[i] <- paste0(p[i]*100,"%CI")
+        prop.table <- cbind(prop.table, outofcontrol[[i]])
       }
-     }
+    }
+  } else {
+      for (i in 1:length(p)){
+        zp <- qnorm(1 - (1 - p[i]) / 2)
+        upperCI[[i]] <- theta + zp * sqrt(gdetheta / admissionsRange)
+        lowerCI[[i]] <- theta - zp * sqrt(gdetheta / admissionsRange)
+        ylowCI[[i]] <- lowerCI[[i]][which(admissionsRange %in% prop.table$n == TRUE)]
+        yuppCI[[i]] <- upperCI[[i]][which(admissionsRange %in% prop.table$n == TRUE)]
+        lowOUT[[i]] <- ifelse(prop.table$y < ylowCI[[i]],TRUE,FALSE)
+        uppOUT[[i]]<- ifelse(prop.table$y > yuppCI[[i]], TRUE, FALSE)
+        outofcontrol[[i]] <- ifelse(lowOUT[[i]] == TRUE | uppOUT[[i]] == TRUE, "OUT","-")
+        outcolname[i] <- paste0(p[i]*100,"%CI")
+        prop.table <- cbind(prop.table, outofcontrol[[i]])
+      }
+    }
   }
 
   x <- prop.table$n; y <- prop.table$y; range <- admissionsRange
-  output <- list(x = x, y = y, theta = theta, range = range, tab = prop.table, upperCI = upperCI, lowerCI = lowerCI, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, myunits = myunits, p = p, unitnames = unitnames, printUnits = printUnits)
+  output <- list(x = x, y = y, theta = theta, range = range, tab = prop.table, upperCI = upperCI, lowerCI = lowerCI, xlab = xlab, ylab = ylab, xlim = xlim, ylim = ylim, myunits = myunits, p = p, unitnames = unitnames, printUnits = printUnits, phi = phi)
   colnames(output$tab) <- c("Unit","y(%)", "Observed","Admissions", outcolname)
   rownames(output$tab) <- seq(1,nrow(output$tab))
   output$tab[,2] <- round(output$tab[,2], digits)

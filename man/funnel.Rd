@@ -9,9 +9,9 @@
 funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1),
   lambda2 = sum(o2)/sum(n2), pi1 = sum(o1)/sum(n1), pi2 = sum(o2)/sum(n2),
   y.type = c("SMR", "SRU"), p = c(0.95, 0.998), theta, method = c("exact",
-  "normal"), direct = FALSE, myunits = NULL, overdispersion = FALSE,
-  option = c("rate", "ratioRates", "prop", "diffProp", "ratioProp"),
-  printUnits = TRUE, plot = TRUE, digits = 5)
+  "normal"), direct = FALSE, myunits = NULL, option = c("rate",
+  "ratioRates", "prop", "diffProp", "ratioProp"), printUnits = TRUE,
+  plot = TRUE, digits = 5, overdispersion = FALSE)
 
 \method{print}{funnel}(x, ...)
 
@@ -54,8 +54,6 @@ funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1),
 
 \item{myunits}{A character vector with the unit names which one would like to benchmark among all units. These units will be highlighted with dots of different collors in the plot. Default is \code{NULL}.}
 
-\item{overdispersion}{Logical (default = \code{FALSE}); If \code{TRUE}, introduces an multiplicative over-dispersion factor phi that will inflate the normal CI null variance. See details.}
-
 \item{option}{A character specifying the type of funnel plot one wants to produce. It can assume \code{"rate"}, \code{"ratioRates"}, \code{"prop"}, \code{"diffProp"} or \code{"ratioProp"}. If \code{option = "rate"}, \code{funnel} plots a standardized rate y versus the expected death or case volume (number of unit admissions) for all units. If \code{option = "ratioRate"}, \code{funnel} can be used to compare units at two diferent periods. It plots a ratio of rates y versus a precision parameter rho. If \code{option = "prop"}, \code{funnel} plots a proportion y versus its case volume (number of admissions). If \code{option = "ratioProp"} or \code{option = "diffProp"}, \code{funnel} can be used to compare units at two diferent periods. It plots a ratio (or difference) of proportions y versus a precision parameter rho. See details.
 
  Suppose we have two measures for each institution: O1, N1 in a baseline period; and O2, N2 in a subsequent period; and we wish to assess the change in the underlying proportion form pi1 to pi2. Two different measures might be of interest: the difference in proportions or the ratio of proportions. Normal approximations are used throughout, and for low (especially zero) counts \code{funnel} function add 0.5 to all r's and 1 to all n's in order to stabilize the estimates.
@@ -67,6 +65,8 @@ In case of \code{option = "diffProp"}, the indicator is Y = (O2/N2 - O1/N1) and 
 \item{plot}{Logical; If \code{TRUE} (default), the correspondent graphic is plotted with the standard option.}
 
 \item{digits}{Integer indicating the number of decimals to be used in the output.}
+
+\item{overdispersion}{Logical (default = FALSE); If TRUE, introduces an multiplicative over-dispersion factor phi that will inflate the normal CI null variance. See details.}
 
 \item{x}{An object of class 'funnel'.}
 
@@ -122,6 +122,12 @@ In many circumstances we can assume an exact or approximate normal distribution 
 
 The console warns if there are units with volume/expected value less than 100.
 
+If \code{overdispersion = TRUE}, the normal CI can be inflated by a overdispersion parameter phi. There are a test for overdispersion which inflate the funnel if it's necessary. An "Winsorezed" over-dispersion parameter is estimated and is used to inflate the funnel limits if it is significantly greater than 1. The parameter phi is returned as an funnel object.
+
+phi = (1/total) * sum((y - theta) ^ 2 * rho)/g(theta)
+
+var(y|theta,rho) = (phi * g(theta))/rho
+
 \item If \code{option = "ratioRate"}, \code{funnel} can be used to compare units at two diferent periods. It plots a ratio of rates y versus a precision parameter rho.
 
 Suppose we have two measures for each institution: O1; E1 in a baseline period and O2; E2 in a subsequent period, and we wish to assess the change in the underlying rate (SMR or SRU). We shall only consider the ratio of rates: exact methods based on a conditional argument are available if E1 = E2, and otherwise normal approximations are used, in which case for low (especially zero) counts the \code{funnel} function adds 0.5 to all O's and E's.
@@ -134,6 +140,8 @@ When E1 = E2, y is plotted versus the average observed count (rho).
 
 When E1 is different of E2, i.e., its used normal approximation, it is convenient to work on a logarithmic scale so that log(theta) is a target for log(Y). And y is plotted versus the expectation per period (rho)
 
+If \code{overdispersion = TRUE}, the normal CI can be inflated by a overdispersion parameter phi. There are a test for overdispersion which inflate the funnel if it's necessary. An "Winsorezed" over-dispersion parameter is estimated and is used to inflate the funnel limits if it is significantly greater than 1. The parameter phi is returned as an funnel object.
+
 \item If \code{option = "prop"}, \code{funnel} plots a proportion y versus its volume.
 It is used for cross-sectional data. Suppose in each institution that O events are observed out of a sample size of N:
 
@@ -141,7 +149,7 @@ The indicator is the observed proportion y = O/N
 
 Assume \code{N} is the precision parameter (volume). For \code{N} > 100 the normal and exact curves almost coincide. So, one could perfectly use  normal approximation if ones data parameter precision is greater than 100, in general.
 
-If \code{overdispersion = TRUE}, the normal CI is inflated by a overdispersion parameter phi. It is kind of arbitrary and usefull in high-volume outcome measures, when the large majority of institutions lie outside the funnel, casting doubt on the appropriateness of the limits.
+If \code{overdispersion = TRUE}, the normal CI can be inflated by a overdispersion parameter phi. There are a test for overdispersion which inflate the funnel if it's necessary. An "Winsorezed" over-dispersion parameter is estimated and is used to inflate the funnel limits if it is significantly greater than 1. The parameter phi is returned as an funnel object.
 
 phi = (1/total) * sum((y - theta) ^ 2 * N)/g(theta)
 
@@ -155,13 +163,9 @@ In case of \code{option = "diffProp"}, the indicator is Y = (O2/N2 - O1/N1) and 
 
 For each cases, the precision parameter (plotted at x axis) can be interpreted as approximately the sample size per period.
 
+If \code{overdispersion = TRUE}, the normal CI can be inflated by a overdispersion parameter phi. There are a test for overdispersion which inflate the funnel if it's necessary. An "Winsorezed" over-dispersion parameter is estimated and is used to inflate the funnel limits if it is significantly greater than 1. The parameter phi is returned as an funnel object.
+
 }
-
-If \code{overdispersion = TRUE}, the normal CI is inflated by a overdispersion parameter phi. It is kind of arbitrary and usefull in high-volume outcome measures, when the large majority of institutions lie outside the funnel, casting doubt on the appropriateness of the limits.
-
-phi = (1/total) * sum((y - theta) ^ 2 * e) / theta
-
-\eqn{var(y|theta,n) = (phi * g(theta)) / e}
 }
 \examples{
 # Loading data
@@ -223,13 +227,13 @@ plot(f4, main = "Ratio of SMRs of periods with different expectation of death",
 
 # To analyze periods by difference in proportions
 f5 <- funnel(unit <- z$Levels[-1], n1 = z$N[-1], o1 = z$Observed[-1],
-n2 = w$N[-1], o2 = w$Observed[-1], method = "diff", option = "diffProp", plot = FALSE)
+n2 = w$N[-1], o2 = w$Observed[-1], option = "diffProp", plot = FALSE)
 f5
 plot(f5, main = "Difference in proportions of death for two periods")
 
 # To analyze periods by ratio of proportions
 f6 <- funnel(unit <- z$Levels[-1], n1 = z$N[-1], o1 = z$Observed[-1],
-n2 = w$N[-1], o2 = w$Observed[-1], method = "diff", option = "ratioProp", plot = FALSE)
+n2 = w$N[-1], o2 = w$Observed[-1], option = "ratioProp", plot = FALSE)
 f6
 plot(f6, main = "Ratio of proportions of death for two periods")
 

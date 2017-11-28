@@ -9,7 +9,7 @@
 \title{Standardized Resource Use (SRU)}
 \usage{
 SRU(prob, death, unit, los, los.exp, class, score, plot = FALSE, type = 1,
-  digits = 2, digits2 = 5, originals = FALSE)
+  digits = 2, digits2 = 5, originals = FALSE, myunits = NULL)
 
 \method{print}{SRU}(x, ...)
 
@@ -18,7 +18,9 @@ SRU(prob, death, unit, los, los.exp, class, score, plot = FALSE, type = 1,
   points.arg = list(pch = 21, col = "white", bg = "cadetblue3", cex = 1.5),
   med.arg = list(col = "dodgerblue4", lwd = 2, lty = 1), tert.arg = list(col
   = "darkorange2", lty = 2, lwd = 1), auto.legend = TRUE, leg.arg = list(x =
-  "top", bty = "n", xpd = NA, inset = -0.2, ncol = 2), bty = "n")
+  "top", bty = "n", xpd = NA, inset = -0.2, ncol = 2), bty = "n",
+  myunits = x$myunits, myunitspts.arg = list(pch = 21, col = "white", bg =
+  "red", cex = 1.5), myunitstext.arg = list(pos = 1, font = 2, cex = 0.8))
 
 cut_in(score, los, death, unit, days, min = 200, exc.ICU = TRUE,
   complete = FALSE, digits = 5)
@@ -48,6 +50,8 @@ SRUcalc(prob, death, unit, los, score, digits = 2)
 
 \item{originals}{Logical; If \code{TRUE} it uses the severity classes and average days as the original article and will override the \code{class} argument if any. It requires the \code{score} argument and it must be the SAPS 3 score. We recommend not to set it \code{TRUE}, unless you really know what you are doing. Even if one wished to have severity classes identical to the original paper, it is better to set the severity classes before running the analysis. Like this, the function will estimate the average days from the data instead of using the fixed average days from the original paper.}
 
+\item{myunits}{A character vector with the unit names which one would like to benchmark among all units. These units will be highlighted with dots of different collors in the plot. Default is \code{NULL}.}
+
 \item{x}{For \code{print.SRU} or \code{plot.SRU}, an object of class 'SRU'.}
 
 \item{...}{Arguments to be passed to \code{\link[graphics]{plot.default}} or to \code{\link[base]{print}}.}
@@ -67,6 +71,10 @@ SRUcalc(prob, death, unit, los, score, digits = 2)
 \item{leg.arg}{List of arguments passed to \code{\link[graphics]{legend}} for plotting legends in \code{plot.SRU}.}
 
 \item{bty}{A character string which determined the type of box which is drawn about plots. See  \code{\link[graphics]{par}}}
+
+\item{myunitspts.arg}{List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to \code{myunits}' SMR and SRU.}
+
+\item{myunitstext.arg}{List of arguments passed to \code{\link[graphics]{text}} for labelling points correponding to \code{myunits}' position.}
 
 \item{days}{For \code{cut_in}, this is a vector with days which one wants to average days to match. See example.}
 
@@ -130,11 +138,11 @@ cut_lims <- cut_in(icu$Saps3Points, icu$los, icu$UnitDischargeName,
                    icu$Unit, days, exc.ICU = TRUE)
 icu$class <- cut(icu$Saps3Points, breaks = cut_lims, include.lowest = TRUE)
 
-# Estimating the SRU
+# Estimating the SRU benchmarking myunit A and B
 x <- SRU(prob = icu$Saps3DeathProbabilityStandardEquation,
 death = icu$UnitDischargeName, unit = icu$Unit,
 los = icu$los, score = icu$Saps3Points,
-originals = TRUE, type = 1, plot = FALSE)
+originals = TRUE, type = 1, plot = FALSE, myunits = c("A","B"))
 x
 plot(x)
 

@@ -4,7 +4,7 @@
 #'
 #' @description \code{SRU} calculates the standardized resource use for ICUs (Intensive Care Units) from information regarding individual patients admissions. The resource use is represented by the patients' length of stay (LOS). Therefore the SRU for each unit is defined as the observed LOS divided by the expected LOS for each ICU. To estimate the expected LOS for each ICU one must define a severity score, here defined by the SAPS 3 score. In theory, the 'score' could be any score/probability estimating death for each ICU admission.
 #'
-#' The \code{plot.SRU} function will return a \code{\link{SMR}} versus SRU scatter plot with its medians and tertiles. Thus, it classifies each unit in the quadrants formed by these two medians: most efficient (ME) is the lower left quadrant (SRU and SMR below the median);  least efficient (LE) is the upper right quadrant (SRU and SMR above the median); and least achieving (LE) - the lower right wuadrant(SRU below and SMR above the median); and over achieving (OA) - the upper left quadrant (SRU above and SMR below the median).
+#' The \code{plot.SRU} function will return a \code{\link{SMR}} versus SRU scatter plot with its medians and tertiles. Thus, it classifies each unit in the quadrants formed by these two medians: most efficient (ME) is the lower left quadrant (SRU and SMR below the median);  least efficient (LE) is the upper right quadrant (SRU and SMR above the median); and least achieving (LA) - the lower right quadrant(SRU below and SMR above the median); and over achieving (OA) - the upper left quadrant (SRU above and SMR below the median).
 #'
 #'  \code{print.SRU} Prints a object of class 'SRU'.
 #'
@@ -61,6 +61,12 @@
 #'
 #' @param complete Logical; For \code{cut_in}, if \code{TRUE}, shows additional information about severity classes.
 #'
+#' @param myunits A character vector with the unit names which one would like to benchmark among all units. These units will be highlighted with dots of different collors in the plot. Default is \code{NULL}.
+#'
+#' @param myunitspts.arg List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to \code{myunits}' SMR and SRU.
+#'
+#' @param myunitstext.arg List of arguments passed to \code{\link[graphics]{text}} for labelling points correponding to \code{myunits}' position.
+#'
 #' @return Two tables: one with information about severity classes and the respective quantities required to estimate the expected LOS, and another with information about ICUs classified as Most Efficient (ME) or Least Efficient (LE).
 #' \itemize{
 #' \item \code{Sev} Severity class.
@@ -110,11 +116,11 @@
 #'                    icu$Unit, days, exc.ICU = TRUE)
 #' icu$class <- cut(icu$Saps3Points, breaks = cut_lims, include.lowest = TRUE)
 #'
-#' # Estimating the SRU
+#' # Estimating the SRU benchmarking myunit A and B
 #' x <- SRU(prob = icu$Saps3DeathProbabilityStandardEquation,
 #' death = icu$UnitDischargeName, unit = icu$Unit,
 #' los = icu$los, score = icu$Saps3Points,
-#' originals = TRUE, type = 1, plot = FALSE)
+#' originals = TRUE, type = 1, plot = FALSE, myunits = c("A","B"))
 #' x
 #' plot(x)
 #'
@@ -140,7 +146,7 @@
 #' @import utils
 #' @export
 
-SRU <- function(prob, death, unit, los, los.exp, class, score, plot = FALSE, type = 1, digits = 2, digits2 = 5, originals = FALSE){
+SRU <- function(prob, death, unit, los, los.exp, class, score, plot = FALSE, type = 1, digits = 2, digits2 = 5, originals = FALSE, myunits = NULL){
   if ( any(is.na(prob)) ){
     stop("'prob' must not have any NA value.")
   }
@@ -205,6 +211,11 @@ SRU <- function(prob, death, unit, los, los.exp, class, score, plot = FALSE, typ
       stop("'class' must be a factor.")
     }
   }
+  if (any(! myunits %in% unit)){
+    warning(paste0("There is no unit called ", myunits[which(!myunits %in% unit)], "\n"))
+    myunits <- myunits[-which(! myunits %in% unit)]
+  }
+
   if(type == 1){dt <- data.frame(prob, death, unit, los, class)}
   if(type == 2){dt <- data.frame(prob, death, unit, los, los.exp, class)}
   ### Quantity of discharge per unit
@@ -216,6 +227,9 @@ SRU <- function(prob, death, unit, los, los.exp, class, score, plot = FALSE, typ
     dt <- droplevels(dt)
     unit_death <- table(dt$unit,dt$death)
     warning(paste(c("The following units were excluded due to absence of survivals:", exc), collapse = ", "))
+    if (any(myunits %in% exc)){
+      myunits <- myunits[-which(myunits %in% exc)]
+    }
   }
 
   ### sum of LOS for each severity class
@@ -324,7 +338,8 @@ SRU <- function(prob, death, unit, los, los.exp, class, score, plot = FALSE, typ
     LOS_obs = LOS_ICU_obs,
     LOS_esp = LOS_ICU_esp,
     ratesef = which(rates$group == "ME" | rates$group == "LE"),
-    totalICU = nrow(unit_death), totalAd = unit_admissions
+    totalICU = nrow(unit_death), totalAd = unit_admissions,
+    myunits = myunits
   )
   colnames(output$LOS.surv) <- c("Sev","Total","Surv","Total.LOS","AvDays")
   rownames(output$estim.eff) <- c("Low.Tert","<Median",">Median","High.Tert","All.Units")
@@ -356,7 +371,7 @@ print.SRU <- function(x, ...){
 
 #' @rdname SRU
 #' @export
-plot.SRU <- function(x, ..., xlim = range(x$rates[,2]), ylim = range(x$rates[,1]), xlab = "SMR", ylab = "SRU", points.arg = list(pch = 21, col = "white", bg = "cadetblue3",cex=1.5), med.arg = list(col="dodgerblue4",lwd = 2,lty = 1), tert.arg = list(col = "darkorange2", lty = 2, lwd = 1), auto.legend = TRUE, leg.arg = list(x = "top", bty = "n", xpd = NA, inset = -.2, ncol = 2), bty = "n"){
+plot.SRU <- function(x, ..., xlim = range(x$rates[,2]), ylim = range(x$rates[,1]), xlab = "SMR", ylab = "SRU", points.arg = list(pch = 21, col = "white", bg = "cadetblue3",cex=1.5), med.arg = list(col="dodgerblue4",lwd = 2,lty = 1), tert.arg = list(col = "darkorange2", lty = 2, lwd = 1), auto.legend = TRUE, leg.arg = list(x = "top", bty = "n", xpd = NA, inset = -.2, ncol = 2), bty = "n", myunits = x$myunits, myunitspts.arg = list(pch = 21, col = "white", bg = "red",cex=1.5), myunitstext.arg = list(pos = 1, font = 2, cex = .8)){
 
   plot(0, 0, ..., xlim = xlim, ylim = ylim, type = 'n', xlab = "", ylab = "", bty = bty, xaxt = "n", yaxt = "n")
 
@@ -376,6 +391,17 @@ plot.SRU <- function(x, ..., xlim = range(x$rates[,2]), ylim = range(x$rates[,1]
   do.call(abline, med.arg)
   do.call(abline, tert.arg)
   do.call(points, points.arg)
+
+  if(length(myunits) > 0){
+
+    myunitspts.arg$x <- x$rates[which(rownames(x$rates[,c(2,1)]) == myunits),c(2,1)]
+    myunitstext.arg$x <- x$rates[which(rownames(x$rates[,c(2,1)]) == myunits),c(2)]
+    myunitstext.arg$y <- x$rates[which(rownames(x$rates[,c(2,1)]) == myunits),c(1)]
+    myunitstext.arg$labels <- x$myunits
+    do.call(points, myunitspts.arg)
+    do.call(text, myunitstext.arg)
+  }
+
   if(auto.legend){
     leg.arg$legend <- c("Median", "Tertile")
     leg.arg$col <- c(med.arg$col, tert.arg$col)

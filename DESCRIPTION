@@ -1,14 +1,15 @@
 Package: ems
 Title: Epimed Solutions Collection for Data Editing, Analysis, and
         Benchmarking of Health Units
-Version: 0.3.1.6
-Date: 2017-04-26
+Version: 1.0.0
+Date: 2017-05-18
 Authors@R: c(person("Lunna", "Borges", role = c("aut"),
 	             email = "lunna.borges@epimedsolutions.com"),
              person("Pedro", "Brasil", role = c("aut", "cre"),
                     email = "pedro.brasil@epimedsolutions.com"))
 Description: Collection of functions for data analysis and
-    editing. Most of them are related to benchmarking with prediction models.
+    editing of clinical and epidemiological data.
+    Most of them are related to benchmarking with prediction models.
 Depends: R (>= 3.3.1)
 License: GPL (>= 2)
 LazyData: true
@@ -18,8 +19,8 @@ Author: Lunna Borges [aut],
 Maintainer: Pedro Brasil <pedro.brasil@epimedsolutions.com>
 Repository: CRAN
 Repository/R-Forge/Project: ems
-Repository/R-Forge/Revision: 42
-Repository/R-Forge/DateTimeStamp: 2017-04-26 18:52:04
-Date/Publication: 2017-04-26 20:03:29 UTC
+Repository/R-Forge/Revision: 56
+Repository/R-Forge/DateTimeStamp: 2017-11-23 15:40:53
+Date/Publication: 2017-11-28 11:34:22 UTC
 NeedsCompilation: no
-Packaged: 2017-04-26 19:05:25 UTC; rforge
+Packaged: 2017-11-23 15:45:22 UTC; rforge
