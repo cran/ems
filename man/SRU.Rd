@@ -2,10 +2,10 @@
 % Please edit documentation in R/SRU.R
 \name{SRU}
 \alias{SRU}
-\alias{SRUcalc}
-\alias{cut_in}
-\alias{plot.SRU}
 \alias{print.SRU}
+\alias{plot.SRU}
+\alias{cut_in}
+\alias{SRUcalc}
 \title{Standardized Resource Use (SRU)}
 \usage{
 SRU(prob, death, unit, los, los.exp, class, score, plot = FALSE, type = 1,
@@ -115,11 +115,11 @@ Most Efficient ICUs have SRU, SMR < median. Least Efficient ICUs have SRU, SMR >
 \description{
 \code{SRU} calculates the standardized resource use for ICUs (Intensive Care Units) from information regarding individual patients admissions. The resource use is represented by the patients' length of stay (LOS). Therefore the SRU for each unit is defined as the observed LOS divided by the expected LOS for each ICU. To estimate the expected LOS for each ICU one must define a severity score, here defined by the SAPS 3 score. In theory, the 'score' could be any score/probability estimating death for each ICU admission.
 
-The \code{plot.SRU} function will return a \code{\link{SMR}} versus SRU scatter plot with its medians and tertiles. Thus, it classifies each unit in the quadrants formed by these two medians: most efficient (ME) is the lower left quadrant (SRU and SMR below the median);  least efficient (LE) is the upper right quadrant (SRU and SMR above the median); and least achieving (LE) - the lower right wuadrant(SRU below and SMR above the median); and over achieving (OA) - the upper left quadrant (SRU above and SMR below the median).
+The \code{plot.SRU} function will return a \code{\link{SMR}} versus SRU scatter plot with its medians and tertiles. Thus, it classifies each unit in the quadrants formed by these two medians: most efficient (ME) is the lower left quadrant (SRU and SMR below the median);  least efficient (LE) is the upper right quadrant (SRU and SMR above the median); and least achieving (LA) - the lower right quadrant (SRU below and SMR above the median); and over achieving (OA) - the upper left quadrant (SRU above and SMR below the median).
 
  \code{print.SRU} Prints a object of class 'SRU'.
 
- \code{cut_in} is used to find limits to define severity classes which are used in \code{SRU} function. The severity classes are necessary to calculate average days to produce one survivor and consequently to estimate the expected LOS in each ICU. Its rationale is to find the severity classes limits that yelds a desired average days of survivors. At some point in time, we made a study to test if different arrangements of the severity classes would yeld different classifications in the efficiency quadrants. Despite this study did not show any difference from the original approach, we left the function in the package. Therefore, any arbitrary severity classes should yeld the same results.
+ \code{cut_in} is used to find limits to define severity classes which are used in \code{SRU} function. The severity classes are necessary to calculate average days to produce one survivor and consequently to estimate the expected LOS in each ICU. Its rationale is to find the severity classes limits that yelds a desired average days of survivors. At some point in time, we made a study to test if different arrangements of the severity classes would yeld different classifications in the efficiency quadrants. Despite this study did not show any difference from the original approach, we left the function in the package. Therefore, any arbitrary severity classes should yeild the same results.
 
  \code{SRUcalc} is a simpler function to estimte SRU and returns, for each unit, the SRU value, the observed and expected number of deaths, and the observed and expected LOS.
 }
@@ -164,13 +164,12 @@ SRUcalc(prob = icu$Saps3DeathProbabilityStandardEquation,
 rm(x, y, days, icu, cut_lims)
 
 }
-\author{
-Lunna Borges and Pedro Brasil
-}
 \references{
 Rothen HU, Stricker K, Einfalt J, Bauer P, Metnitz PGH, Moreno RP, Takala J (2007) Variability in outcome and resource use in intensive care units. Intensive Care Med 33:1329-1336
 }
 \seealso{
 \code{\link{SMR}}, \code{\link{reclass}}, \code{\link{funnel}}
 }
-
+\author{
+Lunna Borges and Pedro Brasil
+}

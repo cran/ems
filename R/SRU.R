@@ -2,17 +2,17 @@
 #'
 #' @name SRU
 #'
-#' @description \code{SRU} calculates the standardized resource use for ICUs (Intensive Care Units) from information regarding individual patients admissions. The resource use is represented by the patients' length of stay (LOS). Therefore the SRU for each unit is defined as the observed LOS divided by the expected LOS for each ICU. To estimate the expected LOS for each ICU one must define a severity score, here defined by the SAPS 3 score. In theory, the 'score' could be any score/probability estimating death for each ICU admission.
+#' @description \code{SRU} calculates the standardized resource use for ICUs (Intensive Care Units) from information regarding admissions of individual patients. Resource use is represented by the patient's length of stay (LOS). Therefore the SRU for each unit is defined as the observed LOS divided by it's expected LOS. To estimate the expected LOS for each ICU one must define a severity score, here defined by the SAPS 3 score. In theory, the 'score' could be any score/probability that estimates death for each ICU admission.
 #'
-#' The \code{plot.SRU} function will return a \code{\link{SMR}} versus SRU scatter plot with its medians and tertiles. Thus, it classifies each unit in the quadrants formed by these two medians: most efficient (ME) is the lower left quadrant (SRU and SMR below the median);  least efficient (LE) is the upper right quadrant (SRU and SMR above the median); and least achieving (LA) - the lower right quadrant(SRU below and SMR above the median); and over achieving (OA) - the upper left quadrant (SRU above and SMR below the median).
+#' The \code{plot.SRU} function will return a \code{\link{SMR}} versus SRU scatter plot with its medians and tertiles. Thus, it classifies each unit in the quadrants formed by these two medians as: most efficient (ME) which is the lower left quadrant (both SRU and SMR below their medians);  least efficient (LE) is the upper right quadrant (both SRU and SMR above their medians); and least achieving (LA) - the lower right quadrant (SRU below and SMR above their medians); and over achieving (OA) - the upper left quadrant (SRU above and SMR below their medians).
 #'
 #'  \code{print.SRU} Prints a object of class 'SRU'.
 #'
-#'  \code{cut_in} is used to find limits to define severity classes which are used in \code{SRU} function. The severity classes are necessary to calculate average days to produce one survivor and consequently to estimate the expected LOS in each ICU. Its rationale is to find the severity classes limits that yelds a desired average days of survivors. At some point in time, we made a study to test if different arrangements of the severity classes would yeld different classifications in the efficiency quadrants. Despite this study did not show any difference from the original approach, we left the function in the package. Therefore, any arbitrary severity classes should yeld the same results.
+#'  \code{cut_in} is used to find limits to define severity classes which are used in \code{SRU} function. The severity classes are necessary to calculate the average of days to produce one survivor and consequently to estimate the expected LOS in each ICU. Its rationale is to find the limits for the severity classes that yeld a desired average of days to produce one survivor. At some point in time, we made a study to test if different arrangements of the severity classes would yeld different classifications in the efficiency quadrants. Despite the fact that this study did not show any difference from each approach, we left the function in the package. Therefore, any arbitrary severity classes should yeild the same results.
 #'
 #'  \code{SRUcalc} is a simpler function to estimte SRU and returns, for each unit, the SRU value, the observed and expected number of deaths, and the observed and expected LOS.
 #'
-#' @param prob Individual predicted death (ranging from 0 to 1) in a vector.
+#' @param prob Individual predicted probability of death (ranging from 0 to 1) in a vector.
 #'
 #' @param death Observed death. Accepted values are 0 (absence) or 1 (presence) in a vector.
 #'
@@ -20,19 +20,19 @@
 #'
 #' @param los A numeric variable indicating the observed length of stay for each patient.
 #'
-#' @param los.exp Estimated length of stay (LOS). This argument is optional and will be required only if \code{type = 2}. If the user has an alternative model to estimate the individual LOS, the predicted individual LOS should passed to this argument. If this is the case, the predicted ICU LOS is estimated as the mean of the individual LOS predictions of these groups.
+#' @param los.exp Estimated length of stay (LOS). This argument is optional and will be required only if \code{type = 2}. If the user has an alternative model to estimate the individual LOS, the predicted individual LOS should be passed to this argument. If this is the case, the predicted ICU LOS is estimated as the mean of the individual predictions of the LOS of these groups.
 #'
-#' @param class A factor variable indicating the class of severity score (e.g. SAPS 3). In the case of SAPS 3, this is a cut in the SAPS 3 score grouping patients into severity classes. This will be required if the argument \code{original = FALSE} and NAs are not allowed; if \code{original = TRUE}, class is ignored.
+#' @param class A factor variable indicating the class of severity score (e.g. SAPS 3). In the case of SAPS 3, this is a cut in the SAPS 3 score, grouping patients into severity classes. This will be required if the argument \code{original = FALSE} and NAs are not allowed; if \code{original = TRUE}, class is ignored.
 #'
-#' @param score A numeric vector with the Acute Physiology Score (SAPS) 3 score for each admission. The function will use this argument to know to wich severity class each patient will assigned to. It's used only when \code{originals = TRUE} and ignored otherwise. NAs are not allowed.
+#' @param score A numeric vector with the Acute Physiology Score (SAPS) 3 score for each admission. The function will use this argument to know to which severity class each patient will be assigned to. It is used only when \code{originals = TRUE} and ignored otherwise. NAs are not allowed.
 #'
-#' @param plot Logical; If \code{TRUE} plots a SMR versus SRU scatter plot.
+#' @param plot Logical; If \code{TRUE}, plots a SMR versus SRU scatter plot.
 #'
-#' @param type Way to calculate SRU. If \code{type = 1}, it does as the original article (default); which is to estimate the ICU's expected LOS by multiplying the overall average days within each severity class by the number of survivors in the same severity class in that ICU, and summing the expected LOS for each severity class in that ICU. If \code{type = 2}, then the user must provide the \code{los.exp} (expected LOS) for each subject (i.e. from a prediction model), and the function will estimate the ICU's expected LOS as the mean of the individual LOS.
+#' @param type A Way to calculate SRU. If \code{type = 1}, it does as the original article to estimate the ICU's expected LOS (default). First, it multiplies the overall average of days of each severity class by the number of survivors in the same severity class in that ICU. Than, it sums the expected LOS for each severity class in that ICU. If \code{type = 2}, the user must provide the \code{los.exp} (expected LOS) for each subject (i.e. from a prediction model), and the function will estimate the ICU's expected LOS as the mean of all individual LOS for patients in that ICU.
 #'
 #' @param digits,digits2 Integer indicating the number of decimals to be used in the output.
 #'
-#' @param originals Logical; If \code{TRUE} it uses the severity classes and average days as the original article and will override the \code{class} argument if any. It requires the \code{score} argument and it must be the SAPS 3 score. We recommend not to set it \code{TRUE}, unless you really know what you are doing. Even if one wished to have severity classes identical to the original paper, it is better to set the severity classes before running the analysis. Like this, the function will estimate the average days from the data instead of using the fixed average days from the original paper.
+#' @param originals Logical; If \code{TRUE}, it uses the severity classes and average days as the original article and will override the \code{class} argument, if any. It requires the \code{score} argument and it must be the SAPS 3 score. We recommend not to set it \code{TRUE} unless you really know what you are doing. Even if one wishes to have severity classes identical to the original paper, it is better to set the severity classes before running the analysis. This way, the function will estimate the average days from the data instead of using the fixed average days from the original paper.
 #'
 #' @param x  For \code{print.SRU} or \code{plot.SRU}, an object of class 'SRU'.
 #'
@@ -40,20 +40,20 @@
 #'
 #' @param xlab,ylab Labels of x and y axis for \code{plot.SRU}.
 #'
-#' @param points.arg List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to ICUs' SMR and SRU.
+#' @param points.arg List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to ICU's SMR and SRU.
 #'
-#' @param med.arg List of arguments passed to \code{\link[graphics]{abline}} for plotting lines corresponding to SRU and SMR medians.
+#' @param med.arg List of arguments passed to \code{\link[graphics]{abline}} for plotting lines corresponding to SRU's and SMR's medians.
 #'
-#' @param tert.arg List of arguments passed to \code{\link[graphics]{abline}} for plotting lines corresponding to SRU and SMR tertiles.
+#' @param tert.arg List of arguments passed to \code{\link[graphics]{abline}} for plotting lines corresponding to SRU's and SMR's tertiles.
 #'
 #' @param auto.legend Logical; If \code{TRUE}, prints a legend with parameters in \code{leg.arg} arguments.
 #'
 #' @param leg.arg List of arguments passed to \code{\link[graphics]{legend}} for plotting legends in \code{plot.SRU}.
-#' @param bty A character string which determined the type of box which is drawn about plots. See  \code{\link[graphics]{par}}
+#' @param bty A character string which determines the type of box that is drawn about plots. See  \code{\link[graphics]{par}}
 #'
 #' @param ... Arguments to be passed to \code{\link[graphics]{plot.default}} or to \code{\link[base]{print}}.
 #'
-#' @param days For \code{cut_in}, this is a vector with days which one wants to average days to match. See example.
+#' @param days For \code{cut_in}, this is a vector of days to get an avarage. See example.
 #'
 #' @param min For \code{cut_in}, this is the minimum desired quantity of patients in each severity class (default = 200) to estimate the average days.
 #'
@@ -63,9 +63,9 @@
 #'
 #' @param myunits A character vector with the unit names which one would like to benchmark among all units. These units will be highlighted with dots of different collors in the plot. Default is \code{NULL}.
 #'
-#' @param myunitspts.arg List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to \code{myunits}' SMR and SRU.
+#' @param myunitspts.arg List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to \code{myunits}'s SMR and SRU.
 #'
-#' @param myunitstext.arg List of arguments passed to \code{\link[graphics]{text}} for labelling points correponding to \code{myunits}' position.
+#' @param myunitstext.arg List of arguments passed to \code{\link[graphics]{text}} for labelling points correponding to \code{myunits}'s position.
 #'
 #' @return Two tables: one with information about severity classes and the respective quantities required to estimate the expected LOS, and another with information about ICUs classified as Most Efficient (ME) or Least Efficient (LE).
 #' \itemize{

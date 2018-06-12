@@ -2,8 +2,8 @@
 % Please edit documentation in R/funnel.R
 \name{funnel}
 \alias{funnel}
-\alias{plot.funnel}
 \alias{print.funnel}
+\alias{plot.funnel}
 \title{Funnel plot for benchmarking health units}
 \usage{
 funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1),
@@ -24,7 +24,7 @@ funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1),
 \arguments{
 \item{unit}{A factor vector representing the unit names.}
 
-\item{y}{A numeric vector representing the "Standardized rate" for each unit, usually the SMR (standardized motality ratio), or possibly the SRU (standardized resource use), accordind to \code{y.type} . It's also called "indicator".}
+\item{y}{A numeric vector representing the "Standardized rate" for each unit, usually the SMR (Standardized Mortality Ratio), or possibly the SRU (Standardized Resource Use), accordind to \code{y.type} . It's also called "indicator".}
 
 \item{n}{A numeric vector representing the case volume, or number of admissions, for each unit.}
 
@@ -46,7 +46,7 @@ funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1),
 
 \item{p}{A confidence level numeric vector. It will return a confidence interval for all vector components. The default is 2 and 3 standard deviations (\code{p = c(.95, 998)}).}
 
-\item{theta}{Target value which specifies the desired expectation for institutions considered "in control". Used when \code{option = "prop"} or \code{option = "rate"}. The function internally estimates a thetha to represent a central tendency of the group. But one may want to set a pre-specified value for thetha to indicate a "baseline" parameter for comparison (e.g 1 for \code{option = "rate"} or .20 for \code{option = "prop"}). If this is the case, the horizontal line representing the thetha may not be centralized in the funnel or may be even outside the funnel (making the plot look weird).}
+\item{theta}{Target value which specifies the desired expectation for institutions considered "in control". Used when \code{option = "prop"} or \code{option = "rate"}. The function internally estimates a thetha to represent a central tendency of the group. But one may want to set a pre-specified value for thetha to indicate a "baseline" parameter for comparison (e.g 1 for \code{option = "rate"} or .20 for \code{option = "prop"}). If this is the case, the horizontal line representing the theta may not be centralized in the funnel or may be even outside the funnel (making the plot look weird).}
 
 \item{method}{There are two kind of approximations, as discussed in \code{direct} parameter. Inside them, there are two options:  to approximate the CI from the exact distribuition (binomial or poisson) or from de normal distribution. So, \code{method} is a character vector representing the kind of approximation required. One could choose between \code{"normal"} or \code{"exact"} (default). It is used when \code{option = "rate"} or \code{option = "prop"}. The original report make no formal comparison of which method is best, however there are mention that the funnels from different methods should look identical or very similar if all units have 100 or more observations. If any unit has less, the funnel from the normal approximation may mislead the desired interpretation. See details.}
 
@@ -246,4 +246,3 @@ Spiegelhalter, David J. "Funnel plots for comparing institutional performance." 
 \seealso{
 \code{\link{SMR}}, \code{\link{SRU}}, \code{\link{reclass}}
 }
-

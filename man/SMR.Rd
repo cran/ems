@@ -186,13 +186,12 @@ forest.SMR(x, digits = 2)
 
 rm(x, icu)
 }
-\author{
-Lunna Borges and Pedro Brasil
-}
 \references{
 David W. Hosmer and Stanley Lemeshow. Confidence intervals estimates of an index of quality performance basend on logistic regression models. Statistics in Medicine , vol. 14, 2161-2172 (1995)
 }
 \seealso{
 \code{\link{SRU}}, \code{\link{reclass}}, \code{\link{funnel}}
 }
-
+\author{
+Lunna Borges and Pedro Brasil
+}

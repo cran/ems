@@ -2,31 +2,57 @@
 #'
 #' @name miscellaneous
 #'
-#' @description Collections of functions for data editing usually used as lower levels for other functions.
+#' @description Collection of functions for data editing, usually used as lower levels for other functions.
 #'
 #' \code{f.num} is a wrapper to format numeric variables that are stored as character or factor, simultaneously it will try to detect comma spearated and replace it by dots before formating the variable as numeric. Any non-numeric encoding will be coerced to NA.
 #'
 #'\code{f.date} is a wrapper either to \code{\link[base]{as.Date}} or \code{\link[base]{strptime}} to format character or factor variables into dates. In Epimed Solutions database there are a few pre-specified formats that \code{f.date} will try to detect and return a formated date. \code{f.date} will try to dected if more than half of the elements in a vector have a pre-specified format. If so, the remaining will be coerced to NA if they have different format from the detected. See example.
 #'
-#' \code{remove.na} identifies all the empties spaces, i.e. the " " cells, of character or factor variables in a data.frame and returns the same data.frame with these empty cells replaced, by default, by NAs. It does not matter the length of the empty spaces. Also, \code{remove.na} trims the leading and trailing empty spaces from all character and factor variables. It does not format the numeric variables. It may also returns at the console a few information about the " " fields.
+#' \code{remove.na} identifies all the empty spaces, i.e. the " " cells, of character or factor variables in a data.frame and returns the same data.frame with these empty cells replaced, by default, by NAs. It does not matter the length of the empty spaces. Also, \code{remove.na} trims the leading and trailing empty spaces from all character and factor variables. It does not format the numeric variables. It may also return at the console a few information about the " " fields.
 #'
 #' \code{tab2tex} removes the empty rows, and also tunrs the rownames of a table epiDisplay::tableStack into the first column, to make it easier to paste the table into a rtf or latex document without empty rows or rownames conflicts.
 #'
-#' \code{trunc_num} truncates a numeric vector by replacing the values below the min value or above the max values by the min and max values respectively. See example.
+#' \code{trunc_num} truncates a numeric vector by replacing the values below the min value or above the max values by the min and max values respectively or optionall to NA. See example.
+#'
+#' \code{dummy.columns} takes a \code{data.frame} with one column with concatatenated levels of a factor (or character) variable and return a \code{data.frame} with additional columns with zeros and ones (dummy values), which names are the factor levels of the original column. See example below. \code{rm.dummy.columns} is an internal function of \code{dummy.columns} that deletes the new dummy columns which have less then a specified minimum events.
 #'
 #' @param num.var A character, or factor variable to be formated as numeric.
 #'
 #' @param date A character or factor variable to be formated as date.
 #'
-#' @param data A data.frame.
+#' @param data A \code{data.frame}.
 #'
 #' @param replace By default, NA. But could be any vector of length 1.
 #'
-#' @param console.output Logical. Print at the console a few information about the "" fields?
+#' @param console.output Logical. Print at the console a few informations about the " " fields?
 #'
 #' @param x,nc For \code{tab2tex} x is a object from epiDisplay::tableStack. nc is the number of the last column to keep in the table. If the table has 5 columns and nc = 3, then columns 4 and 5 are removed. For \code{trunc_num}, x is a numeric vector.
 #'
 #' @param min,max For \code{trunc_num}, min and max are the minimal and maximal numeric values where the numeric vector will be truncated.
+#'
+#' @param toNA For \code{trunc_num}, if FALSE any min and max are the minimal and maximal numeric values where the numeric vector will be truncated.
+#'
+#' @param original.column A character vector representing the name of the column the be transformed in dummy variables.
+#'
+#' @param factors A character vector to make new dummy columns and to match values in \code{original.column}. This is interesting if the user desires to make dummy only from a few factors in the originlal column. Ignored if scan.oc = TRUE
+#'
+#' @param scan.oc Default = FALSE, if TRUE, \code{dummy.columns} scans the specified \code{original.column} and uses all factors to generate dummy variables. It overrides the \code{factor} argument.
+#'
+#' @param sep A character of legth one that systematically split the factors in the original columns. It wil be passed to the \code{sep} argument in the \code{\link[base]{scan}} function.
+#'
+#' @param colnames.add The default is '= "Dummy_"'. This is a character vector of length one to stick in the \code{colnames} of the dummy variables. For example, if the orginal column has A;B;C factor levels, the new dummy variables \code{colnames} would be "Dummy_A", "Dummy_B", and "Dummy_C"
+#'
+#' @param event A character string to be detected as a event. In \code{rm.dummy.columns}, if the columns are coded as '0' and '1', the event is '1', if it is coded as logical, the events is 'TRUE'.
+#'
+#' @param min.events Either \code{NULL} (default), or a numeric scalar. If any of the new variables have less events then specified in \code{min.events}, they will be deleted before returning the output data.
+#'
+#' @param warn Default is \code{FALSE}. If \code{TRUE}, \code{dummy.columns} will print at the console the deleted columns names.
+#'
+#' @param rm.oc Default is \code{FALSE}. If \code{TRUE}, \code{dummy.columns} will delete the original column before returnig the final \code{data.frame}.
+#'
+#' @param return.factor Default is \code{TRUE}. If \code{TRUE}, \code{dummy.columns} return factor columns with "0" and "1" levels, or numeric otherwise.
+#'
+#' @param colnames For \code{rm.dummy.columns} this is the names of the columns to be tested and deleted inside \code{dummy.columns}.
 #'
 #' @author Lunna Borges & Pedro Brasil
 #'
@@ -66,6 +92,25 @@
 #' # Truncating numeric vectors
 #' trunc_num(1:12, min = 3, max = 10)
 #'
+#' # Truncating numeric vectors but returning NAs instead
+#' trunc_num(1:12, min = 3, max = 10, toNA = TRUE)
+#'
+#'# Simulating a dataset for dummy.columns example
+#'
+#'y <- data.frame(v1 = 1:20,
+#'                v2 = sapply(1:20, function(i) toString(sample(c("Code1","Code2","Code3","Code4"),
+#'                      size = sample(2:4, 1), replace = FALSE))))
+#'y
+#'
+#' # For a few of the codes in the original column
+#'y <- dummy.columns(y, original.column = "v2", factor = c("Code2","Code3"))
+#'y
+#'
+#' # For all codes in the original column
+#'y <- dummy.columns(y[, 1:2], original.column = "v2", scan.oc = TRUE)
+#'y
+#'
+#'rm(y)
 #' @rdname miscellaneous
 #' @export
 f.num <- function(num.var){
@@ -86,7 +131,7 @@ f.num <- function(num.var){
 #' @export
 f.date <- function(date){
   l.date.2 <- length(date) / 2
-  if (class(date) != "Date") {
+  if (class(date) != "Date" && any(class(date) != c("POSIXlt", "POSIXt"))) {
     date <- as.character(date)
     if ((sum(substr(date, 5, 5) == "-", na.rm = TRUE) > l.date.2) &
         (sum(substr(date, 14, 14) == ":", na.rm = TRUE) > l.date.2)) {
@@ -160,7 +205,91 @@ tab2tex <- function(x, nc = ncol(x)){
 
 #' @rdname miscellaneous
 #' @export
-trunc_num <- function(x, min, max) {
-  if (!is.numeric(x)) { stop("'x' is not numeric.")}
-  ifelse(x > max, max, ifelse(x < min, min, x))
+trunc_num <- function(x, min, max, toNA = FALSE) {
+  if (!is.numeric(x)) { stop("'x' must be numeric.")}
+  if (!is.logical(toNA)) { stop("'toNA' must be logic.")}
+  if (toNA) {
+    ifelse(x > max, NA, ifelse(x < min, NA, x))
+  } else {
+      ifelse(x > max, max, ifelse(x < min, min, x))
+  }
+}
+
+#' @rdname miscellaneous
+#' @export
+dummy.columns <- function(data, original.column, factors, scan.oc = FALSE, sep = ",", colnames.add = "Dummy.", min.events = NULL, rm.oc = FALSE, warn = FALSE, return.factor = TRUE) {
+  if (!is.data.frame(data)) {
+    stop("'data' must be a data.frame.")
+  }
+  if (!is.character(original.column) && !is.numeric(original.column)) {
+    stop("'original.colum' must be either a character or a numeric vector.")
+  }
+  if (length(original.column) != 1) {
+    stop("'original.colum' must have length one.")
+  }
+  if (!any(grepl(original.column, colnames(data)))) {
+    stop("'original.colum' is not a variable in 'data'.")
+  }
+  if (!is.character(sep) || length(sep) != 1) {
+    stop("'sep' must be a character vector of length 1.")
+  }
+  if (!is.logical(rm.oc)) {
+    stop("'rm.oc' must be logical.")
+  }
+  if (!is.logical(scan.oc)) {
+    stop("'scan.oc' must be logical.")
+  }
+  if (scan.oc) {
+    factors <- as.character(sort(unique(trimws(scan(text = as.character(data[, original.column]), sep = sep, what = "character", quiet = TRUE)))))
+  }
+  if (!is.character(factors)) {
+    stop("'factors' must be a character vector.")
+  }
+  if (!is.null(min.events)) {
+    if (length(min.events) != 1 || !is.numeric(min.events) || min.events < 1)
+    stop("'min.events' must be either null or a positive number.")
+  }
+  if (!is.logical(return.factor)) {
+    stop("'return.factor' must be logical.")
+  }
+
+  nr <- nrow(data)
+  lf <- length(factors)
+  b <- as.data.frame(matrix(NA, nrow = nr, ncol = lf))
+  colnames(b) <- paste0(colnames.add, factors)
+  if ( return.factor ){
+    for (i in 1:lf) {
+      b[, i] <- as.factor(ifelse(grepl(factors[i], data[, original.column]), 1, 0))
+    }
+  } else {
+      for (i in 1:lf) {
+        b[, i] <- ifelse(grepl(factors[i], data[, original.column]), 1, 0)
+      }
+  }
+
+
+  output <- cbind(data, b)
+  # Remover as colunas que possuem poucos eventos
+  if ( !is.null(min.events) ) {
+    output <- rm.dummy.columns(data = output, colnames = colnames.add, min.events = min.events, warn = warn)
+  }
+  # Remover as colunas que possuem poucos eventos
+  if ( rm.oc ) {
+    output[, original.column] <- NULL
+  }
+  output
+}
+
+#' @rdname miscellaneous
+#' @export
+rm.dummy.columns <- function (data, colnames, event = "1", min.events = 50, warn = FALSE) {
+  col.index <- grep(colnames, colnames(data))
+  event.table <- lapply(data[, col.index], table)
+  cond.table <- sapply(seq_along(event.table), function(i) event.table[[i]][event] < min.events)
+  cond.table[is.na(cond.table)] <- TRUE
+  if (warn) {
+    warning(paste("The following columns were deleted:", toString(colnames(data)[col.index[cond.table]])))
+  }
+  data[, col.index[cond.table]] <- list(NULL)
+  data
 }

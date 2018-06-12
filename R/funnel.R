@@ -12,7 +12,7 @@
 #'
 #' @param unit A factor vector representing the unit names.
 #'
-#' @param y A numeric vector representing the "Standardized rate" for each unit, usually the SMR (standardized motality ratio), or possibly the SRU (standardized resource use), accordind to \code{y.type} . It's also called "indicator".
+#' @param y A numeric vector representing the "Standardized rate" for each unit, usually the SMR (Standardized Mortality Ratio), or possibly the SRU (Standardized Resource Use), accordind to \code{y.type} . It's also called "indicator".
 #'
 #' @param n A numeric vector representing the case volume, or number of admissions, for each unit.
 #'
@@ -34,7 +34,7 @@
 #'
 #' @param p A confidence level numeric vector. It will return a confidence interval for all vector components. The default is 2 and 3 standard deviations (\code{p = c(.95, 998)}).
 #'
-#' @param theta Target value which specifies the desired expectation for institutions considered "in control". Used when \code{option = "prop"} or \code{option = "rate"}. The function internally estimates a thetha to represent a central tendency of the group. But one may want to set a pre-specified value for thetha to indicate a "baseline" parameter for comparison (e.g 1 for \code{option = "rate"} or .20 for \code{option = "prop"}). If this is the case, the horizontal line representing the thetha may not be centralized in the funnel or may be even outside the funnel (making the plot look weird).
+#' @param theta Target value which specifies the desired expectation for institutions considered "in control". Used when \code{option = "prop"} or \code{option = "rate"}. The function internally estimates a thetha to represent a central tendency of the group. But one may want to set a pre-specified value for thetha to indicate a "baseline" parameter for comparison (e.g 1 for \code{option = "rate"} or .20 for \code{option = "prop"}). If this is the case, the horizontal line representing the theta may not be centralized in the funnel or may be even outside the funnel (making the plot look weird).
 #'
 #' @param direct Logical (default = \code{FALSE}); Used when \code{option = "rate"}. If \code{TRUE}, we assume the rates are reported as a rate per (say) 1000 individuals, and that the rate has been transformed to a proportion y between 0 and 1. The measure of the associated error (horizontal axis) may be reported in the size of population \code{n} (CI - confidence interval - is made by a binomial approximation). If \code{FALSE}, it may be reported in the population expected death \code{e} (CI is made by a poisson approximation). See details.
 #'

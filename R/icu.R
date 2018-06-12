@@ -12,10 +12,10 @@
 #'   \item \code{UnitDestinationName} ICU unit destination after discharge.
 #'   \item \code{HospitalAdmissionDate} Hospital admission date.
 #'   \item \code{HospitalDischargeDate} Hospital discharge date.
-#'   \item \code{HospitalDischargeName} Hospital admission outcome. Death = 1, or Discharge = 0.
+#'   \item \code{HospitalDischargeName} Hospital admission outcome. Death = 1, Discharge = 0.
 #'   \item \code{LengthHospitalStayPriorUnitAdmission} Hospital length of stay before unit admission.
-#'   \item \code{AdmissionSourceName} The origin of the patient before ICU unit admission.
-#'   \item \code{AdmissionTypeName_pri} Admission for  or Clinical treatment (1) Elective surgery (2), or Urgent surgery (3).
+#'   \item \code{AdmissionSourceName} The origin of the patient before ICU admission.
+#'   \item \code{AdmissionTypeName_pri} Admission as Clinical treatment (1) Elective surgery (2), or Urgent surgery (3).
 #'   \item \code{AdmissionReasonName_pri} Main diagnosis groups.
 #'   \item \code{Vasopressors_D1} Vasopressors use at ICU first day admission? No = No, Yes = 1
 #'   \item \code{IsMechanicalVentilation1h} Required mechanichal ventilation at 1st hour of admission. No = 0, Yes = 1.
@@ -27,9 +27,5 @@
 #'
 #' @format A data frame with 13709 rows and 24 variables
 #' @source Organizational characteristics, outcomes, and resource use in 78 Brazilian intensive care units: the ORCHESTRA study. Intensive Care Med. 2015 Dec;41(12):2149-60.
-
-
-
-
 "icu"
-#> [1] "icu"
+#>[1]"icu"
