@@ -232,8 +232,22 @@ SMR.table <- function(data, group.var, obs.var, pred.var, digits = 5, use.label 
     stop("'reorder' must be one of 'no','SMR','lower.Cl' or 'upper.Cl'")
   }
   cont.table <- sapply(1:length(group.var), function(i) table(data[, group.var[i]]))
+
+
+
   if (any(unlist(cont.table) == 0)) {
-    warning("In SMR analysis, levels were deleted before analysis due to zero observations.")
+    # warning("In SMR analysis, levels were deleted before analysis due to zero observations.")
+
+    # which levels were deleted
+    if(is.matrix(unlist(cont.table))){
+      deleted_levels <- rownames(unlist(cont.table))[which(unlist(cont.table) == 0)]
+    } else {
+      deleted_levels <- names(unlist(cont.table))[which(unlist(cont.table) == 0)]
+    }
+
+    warning(paste("In SMR analysis, level",deleted_levels,"were deleted before analysis due to zero observations.\n"))
+
+
     data[ , group.var] <- droplevels(data[ , group.var])
   }
   Variables <- c("Overall", unlist(sapply(1:length(group.var), function(i) rep(group.var[i], nlevels(data[ , group.var[i]])))))

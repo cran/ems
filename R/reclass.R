@@ -45,7 +45,7 @@
 #' @param leg.arg List of arguments passed to \code{\link[graphics]{legend}} for plotting legends corresponding to SRU and SMR medians and tertiles in 1st and 2nd stage plots for \code{plot.reclass}.
 #' @param main.arg_x,main.arg_y List of arguments passed to \code{\link[graphics]{plot}} for the titles for the 1st and 2nd stage plots for \code{plot.reclass}.
 #'
-#' @param ... Arguments to be passed to methods, such as \code{\link[graphics]{graphical parameters}} (see \code{\link[graphics]{par}}).
+#' @param ... Arguments to be passed to methods (see \code{\link[graphics]{par}}).
 #'
 #' @return \code{reclass} retunrs  a data.frame with the following columns:
 #' \itemize{

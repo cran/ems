@@ -35,19 +35,19 @@ reclass(x, y, same = TRUE, plot = FALSE, digits = 2, compare = c("SRU",
 \arguments{
 \item{x, y}{Objects of class 'SRU'. x is the SRU analsys from the 1st period (e.g. first trimester) and y from the 2nd period (e.g. second trimester). For \code{print.reclass} or \code{plot.reclass}, x is an object of class 'reclass'.}
 
-\item{same}{Logical; If \code{TRUE}, compare the same units, with the same severity classes at two consecutive time periods (default). If \code{same = TRUE} and the ICUs do not match exactly in 'x' and 'y', there is a warning and non matching units are discarded from the analysis. If \code{FALSE}, it compares the same units, with the different severity classes within the same period. In this case, if the ICUs do not match exactly in 'x' and'y', the function will return an error.}
+\item{same}{Logical; If \code{TRUE}, compare the same units, with the same severity classes at two consecutive time periods (default). If \code{same = TRUE} and the ICUs do not match exactly in 'x' and 'y', there is a warning and non matching units are discarded from the analysis. If \code{FALSE}, it compares the same units, with different severity classes within the same period. In this case, if the ICUs do not match exactly in 'x' and'y', the function will return an error.}
 
 \item{plot}{Logical. If \code{TRUE} (default), plots a SMR vs. SRU scatter plot highlighting the ICUs which had their classification changed.}
 
 \item{digits}{Integer indicating the number of decimal places to be used in the output.}
 
-\item{compare}{The way one prefer to benchmark the ICUs: by "SRU" (default), "SMR" or "BOTH". If "BOTH", the ICUs will be ranked by their SRU.}
+\item{compare}{The way one prefers to benchmark the ICUs: by "SRU" (default), "SMR" or "BOTH". If "BOTH", the ICUs will be ranked by their SRU.}
 
 \item{decreasing}{Logical. Should the sort order of ICU's rank be increasing or decreasing?}
 
-\item{complete.rank}{Logical. If \code{TRUE} (default), returns all ICUs ranked. If \code{FALSE}, returns only ICUs whose changed their efficiency classification ranked.}
+\item{complete.rank}{Logical. If \code{TRUE} (default), returns all ICUs ranked. If \code{FALSE}, returns only ICUs whose efficiency classification ranked changed.}
 
-\item{...}{Arguments to be passed to methods, such as \code{\link[graphics]{graphical parameters}} (see \code{\link[graphics]{par}}).}
+\item{...}{Arguments to be passed to methods (see \code{\link[graphics]{par}}).}
 
 \item{xlim_x, ylim_x}{Limits for x and y axis for 1st stage plot for \code{plot.reclass}.}
 
@@ -63,15 +63,15 @@ reclass(x, y, same = TRUE, plot = FALSE, digits = 2, compare = c("SRU",
 
 \item{text.arg_x, text.arg_y}{List of arguments passed to \code{\link[graphics]{text}} for plotting units labels in 1st and 2nd stage plots for \code{plot.reclass}.}
 
-\item{worse.arg_x, worse.arg_y}{List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to units which got your rank worse in 1st and 2nd stage plots for \code{plot.reclass}.}
+\item{worse.arg_x, worse.arg_y}{List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to units which got their rank worse in 1st and 2nd stage plots for \code{plot.reclass}.}
 
-\item{better.arg_x, better.arg_y}{List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to units which got your rank better in 1st and 2nd stage plots for \code{plot.reclass}.}
+\item{better.arg_x, better.arg_y}{List of arguments passed to \code{\link[graphics]{points}} for plotting points correponding to units which got their rank better in 1st and 2nd stage plots for \code{plot.reclass}.}
 
 \item{auto.legend}{Logical. If \code{TRUE}, it prints a legend with \code{leg.arg} arguments for \code{plot.reclass}.}
 
 \item{leg.arg}{List of arguments passed to \code{\link[graphics]{legend}} for plotting legends corresponding to SRU and SMR medians and tertiles in 1st and 2nd stage plots for \code{plot.reclass}.}
 
-\item{main.arg_x, main.arg_y}{List of arguments passed to \code{\link[graphics]{plot}} for overall title for 1st and 2nd stage plots for \code{plot.reclass}.}
+\item{main.arg_x, main.arg_y}{List of arguments passed to \code{\link[graphics]{plot}} for the titles for the 1st and 2nd stage plots for \code{plot.reclass}.}
 }
 \value{
 \code{reclass} retunrs  a data.frame with the following columns:

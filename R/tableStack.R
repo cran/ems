@@ -37,12 +37,12 @@
 #'
 #' This function simultaneously explores several variables with a fixed integer rating scale. For non-factor variables, the default values for tabulation are the minimum and the maximum of all variables but can be specified by the user.
 #'
-#'When 'by' is omitted, all variables must be of the same class, and must be 'integer', 'factor' or 'logical. Some parameters are only used if by is omitted, others are only used if by is available. The by-omitted dependents are minlevel, maxlevel, count, na.rm, means, medians, sds, total, reverse, vars.to.reverse. The by-available dependents are iqr, prevalence, percent, frequency, test, name.test, total.column, simulate.p.value, sample.size, assumption.p.value, NArow, NAcol, drplvls.
+#'When 'by' is omitted, all variables must be of the same class, and must be 'integer', 'factor' or 'logical. Some parameters are only used if by is omitted, others are only used if by is available. The by-omitted dependent variable are minlevel, maxlevel, count, na.rm, means, medians, sds, total, reverse, vars.to.reverse. The by-available dependent variables are iqr, prevalence, percent, frequency, test, name.test, total.column, simulate.p.value, sample.size, assumption.p.value, NArow, NAcol, drplvls.
 #'Unlike function 'alpha', the argument 'reverse' has a default value of FALSE. This argument is ignored if 'vars.to.reverse' is specified.
 #'
 #'Options for 'reverse', 'vars.to.reverse' and statistics of 'means', 'medians', 'sds' and 'total' are available only if the items are not factor. To obtain statistics of factor items, users need to use 'unclassDataframe' to convert them into integer.
 #'
-#'When the 'by' argument is given, 'reverse' and 'vars.to.reverse' do not apply, as mentioned before. Instead, columns of the 'by' variable will be formed. A table will be created against each selected variable. If the variable is a factor or coerced to factor with 'vars.to.factor', cross-tabulation will result with percents as specified, ie. "column", "row", or "none" (FALSE). For a dichotomous row variable, if set to 'TRUE', the prevalence of row variable in the form of a fraction is displayed in each subgroup column. For objects of class 'numeric' or 'integer', means with standard deviations will be displayed. For variables with residuals that are not normally distributed or where the variance of subgroups are significantly not normally distributed (using a significance level of 0.01), medians and inter-quartile ranges will be presented if the argument 'iqr' is set to "auto" (by default). Users may specify a subset of the selected variables (from the 'vars' argument) to be presented in such a form. Otherwise, the argument could be set as any other character string such as "none", to insist to present means and standard deviations.
+#'When the 'by' argument is given, 'reverse' and 'vars.to.reverse' do not apply, as mentioned before. Instead, columns of the 'by' variable will be formed. A table will be created against each selected variable. If the variable is a factor or coerced to factor with 'vars.to.factor', cross-tabulation will result with percents as specified, ie. "column", "row", or "none" (FALSE). For a dichotomous row variable, if set to 'TRUE', the prevalence of row variable in the form of a fraction is displayed in each subgroup column. For objects of class 'numeric' or 'integer', means with standard deviations will be displayed. For variables with residuals that are not normally distributed or where the variance of subgroups are significantly not normally distributed (using a significance level of 0.01), medians and inter-quartile ranges will be presented if the argument 'iqr' is set to "auto" (by default). Users may specify a subset of the selected variables (from the 'vars' argument) to be presented in such a form. Otherwise, the argument could be set as any other character string, except the variables names, to insist to present means and standard deviations.
 #'
 #'When 'test = TRUE' (default), Pearson's chi-squared test (or a two-sided Fisher's exact test, if the sample size is small) will be carried out for a categorical variable or a factor. Parametric or non-parametric comparison and test will be carried out for a object of class 'numeric' or 'integer' (See 'iqr' and 'assumption.p.value' below). If the sample size of the numeric variable is too small in any group, the test is omitted and the problem reported.
 #'
@@ -76,80 +76,126 @@
 #'Pedro Brasil <pedro.brasil@epimedsolutions.com>
 #' @references 'table', 'tab1', 'summ', 'alpha', 'unclassDataframe'
 #' @examples
-#' \dontrun{
-#' data(Oswego)
-#' tableStack(bakedham:fruitsalad, dataFrame=Oswego)
-#' .data <- Oswego
-#' attach(.data)
-#' tableStack(bakedham:fruitsalad, .data) # Default data frame is .data
-#' tableStack(bakedham:fruitsalad, .data, by= ill)
-#' tableStack(bakedham:fruitsalad, .data, by= ill, prevalence=TRUE)
-#' tableStack(bakedham:fruitsalad, .data, by= ill, percent=FALSE)
-#' tableStack(bakedham:fruitsalad, .data, by= ill, percent=FALSE, name.test=FALSE)
-#' tableStack(bakedham:fruitsalad, .data, by= ill, NAcol = TRUE)
-#' tableStack(bakedham:fruitsalad, .data, by= ill, NAcol = TRUE, NArow = TRUE)
-#' detach(.data)
+#' set.seed(1)
+#' data <- data.frame(sex = sample(c("M","F"), 50, rep = TRUE),
+#' age = sample(c(NA,20:70), 50, rep = TRUE),
+#' admissionType = sample(c(NA,"urgency", "clinical", "scheduled"), 50, rep = TRUE),
+#' hospitalizationTime = sample(c(0:10), 50, rep = TRUE),
+#' numberOfChildren = sample(c(NA,0:3), 50, rep = TRUE),
+#' cancerInFamily = sample(c(NA,TRUE,FALSE), 50, rep = TRUE),
+#' diabetesInFamily = sample(c(TRUE,FALSE), 50, rep = TRUE),
+#' thrombosisInFamily = sample(c(TRUE,FALSE), 50, rep = TRUE),
+#' mentaldiseasesInFamily = sample(c(TRUE,FALSE), 50, rep = TRUE),
+#' cardiadicdiseaseInFamily = sample(c(NA,TRUE,FALSE), 50, rep = TRUE),
+#' readmission = sample(c(NA,TRUE,FALSE), 50, rep = TRUE))
 #'
+#' attach(data)
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, dataFrame = data)
+#' detach(data)
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data) # Default data frame is data
+#' # "by" compares variables
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data, by= readmission)
+#' # "prevalence" returns the prevalence instead of the absolute values
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data,
+#' by= readmission, prevalence=TRUE)
+#' # "percent" as FALSE hides the percentage in parenthesis
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data,
+#' by= readmission, percent=FALSE)
+#' # "name.test" as FALSE hides the column that shows the tests names
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data,
+#' by= readmission, percent=FALSE, name.test=FALSE)
+#' # "NAcol" displays a column of NA values on the variable on "by"
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data,
+#' by= readmission, NAcol = TRUE)
+#' # "NArow" displays rows of NA values on the variables on "vars"
+#' tableStack(cancerInFamily:cardiadicdiseaseInFamily, data,
+#' by= readmission, NAcol = TRUE, NArow = TRUE)
 #'
-#' data(Cars93, package = "MASS")
-#' .data <- Cars93
-#' tableStack(vars=4:25, .data, by=Origin)
-#' tableStack(vars=4:25, .data, by="none")
-#' tableStack(vars=4:25, .data, by=Origin, total.column=TRUE)
-#' tableStack(vars=4:25, .data, by = NONE)
+#'# the specification of the vars may be done as the range
+#' tableStack(vars=2:7, data, by=sex)
+#' # "by" var may be specified as "none" and the selected vars will be crossed only against the total
+#' tableStack(vars=2:7, data, by="none")
+#' # by = NONE works just as by = "none"
+#' tableStack(vars=2:7, data, by = NONE)
+#' # total.column displays a column of totals in adition to the variable on by
+#' tableStack(vars=2:7, data, by=sex, total.column=TRUE)
 #'
+#' var.labels <- c("sex", "Type of admission for each patient",
+#' "age", "Duration time in days of the patient's hospitalization",
+#' "Number of children that the patient have",
+#' "whether or not the patient has cancer in family",
+#' "whether or not the patient has diabetes in family",
+#' "whether or not the patient has thrombosis in family",
+#' "whether or not the patient has mental diseases in family",
+#' "whether or not the patient has cardiac diseases in family",
+#' "whether or not the patient is on a relapse admission")
+#' #setting the attribute var.labels
+#' attr(data, "var.labels") <- var.labels
+#' rm(var.labels)
 #'
-#' data(Attitudes)
-#' .data <- Attitudes
-#' attach(.data)
-#' tableStack(qa1:qa18, .data)  # May need full screen of Rconsole
-#' tableStack(qa1:qa18, .data, var.labels.trunc=35)
+#'# May need full screen of Rconsole
+#' tableStack(vars=c(numberOfChildren,hospitalizationTime), data)
 #' # Fits in with default R console screen
-#' tableStack(qa1:qa18, .data, reverse=TRUE) -> a
+#' tableStack(vars=c(numberOfChildren,hospitalizationTime), data,
+#' var.labels.trunc=35)
+#' tableStack(vars=c(age,numberOfChildren,hospitalizationTime),
+#' data, reverse=TRUE) -> a
 #' a
 #' ## Components of 'a' have appropriate items reversed
 #' a$mean.score -> mean.score
 #' a$total.score -> total.score
-#' .data$mean.score <- mean.score
-#' .data$total.score <- total.score
-#' rm(total.score, mean.score)
-#' detach(.data)
-#' attach(.data)
-#' tableStack(c(qa1,qa13:qa18,mean.score,total.score), .data, by=sex, test=FALSE)
-#' tableStack(c(qa15, qa17, mean.score:total.score), .data, by=sex, iqr=c(qa17,total.score))
-#' tableStack(c(qa15, qa17, mean.score:total.score), .data, by=dep, iqr=c(qa17,total.score))
-#' ## 'vars' can be mixture of different classes of variables
-#' .data$highscore <- mean.score > 4
-#' tableStack(mean.score:highscore, .data, by=sex, iqr=total.score)
-#' detach(.data)
-#' rm(list=ls())
+#' data$mean.score <- mean.score
+#' data$total.score <- total.score
 #'
-#' data(Ectopic)
-#' .data <- Ectopic
-#' tableStack(vars=3:4, .data, by=outc)
-#' tableStack(vars=3:4, .data, by=outc, percent="none")
-#' tableStack(vars=3:4, .data, by=outc, prevalence = TRUE)
-#' tableStack(vars=3:4, .data, by=outc, name.test = FALSE)
+#'# hiding the test column
+#' tableStack(c(age, numberOfChildren,hospitalizationTime,
+#' mean.score,total.score), data, by=sex, test=FALSE)
+#' # variables specified on iqr will not display SD but IQR instead
+#' tableStack(3:5, data, by=sex, iqr=hospitalizationTime)
+#' ## 'vars' can be mixture of variables of different classes
+#' tableStack(3:5, data, by=admissionType,
+#' iqr=c(hospitalizationTime, total.score))
+#'
+#' data$highscore <- mean.score > 4
+#' # a variable with some comparison may be created easily
+#' tableStack(mean.score:highscore, data,
+#' by=sex, iqr=total.score)
+#'
+#'# the percentage information may be hidden
+#' tableStack(vars=c(readmission,admissionType),
+#' data, by=sex, percent="none")
+#' # it may be shown the prevalende of the
+#' # variable instead of the values themselves
+#' tableStack(vars=c(readmission,admissionType), data,
+#' by=sex, prevalence = TRUE)
+#' # the name of the tests may be hidden
+#' # while the test itself still shows
+#' tableStack(vars=c(readmission,admissionType), data,
+#' by=sex, name.test = FALSE)
 #'
 #' ## Variable in numeric or factor
-#' data(Outbreak)
-#' .data <- Outbreak
-#' # Comparison of exposure to food items between the two gender
-#' tableStack(vars=5:8, .data, by=sex) # as continuous varaibles
-#' tableStack(vars=5:8, .data, by=sex, vars.to.factor = 5:8) # as factors
+#' # as continuous varaibles
+#' tableStack(vars=3:5, data, by=sex)
+#' # as factors
+#' tableStack(vars=3:5, data, by=sex, vars.to.factor = 3:5)
 #'
 #' ## Using drplvls
-#' # a dataframe was created containing a factor with an unused level
-#' data <- data.frame(
-#'   sample(1:10,2000, replace = T),
-#'   factor(sample(c("Car","Bus"), 2000, replace = T),
-#'      levels = c("Car","Bus","Truck")),
-#'   sample(c("US","CA"), 2000, replace = T))
-#'  names(data) <- c("Age","Type","Origin")
+#' # a dataframe will be created containing a factor with an unused level
+#' bloodbank <- data.frame(AgeInDays =
+#'     sample(0:15,200, replace = TRUE), Type =
+#'     factor(sample(c("A","B","0"), 200, replace = TRUE),
+#'       levels = c("A","B","AB","0")), Origin =
+#'     sample(c("US","CA"), 200, replace = TRUE))
 #'
-#'  # by using drplvls the row of the unused fator is hidden
-#'  tableStack(vars = c(Age, Type), data, by = Origin, drplvls = TRUE)
-#' }
+#' # by using drplvls the row of the unused fator is hidden
+#' tableStack(vars = c(AgeInDays, Type),
+#' bloodbank, by = Origin) #usual
+#' tableStack(vars = c(AgeInDays, Type),
+#' bloodbank, by = Origin,
+#' drplvls = TRUE) # with drplvls
+#'
+#' rm(total.score, mean.score, a, data, bloodbank)
+
 #' @export
 
 tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", count = TRUE, na.rm = FALSE, means = TRUE, medians = FALSE, sds = TRUE, decimal = 2, total = TRUE, var.labels = TRUE, var.labels.trunc = 150, reverse = FALSE, vars.to.reverse = NULL, by = NULL, vars.to.factor = NULL, iqr = "auto", prevalence = FALSE, percent = c("column", "row", "none"), frequency = TRUE, test = TRUE, name.test = TRUE, total.column = FALSE, simulate.p.value = FALSE, sample.size = TRUE, assumption.p.value = 0.01, NAcol = FALSE, NArow = FALSE, drplvls = FALSE){
@@ -248,7 +294,9 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
   }
   selected.iqr <- eval(substitute(iqr), nl, parent.frame())
   if (is.character(selected.iqr)){
+    if (selected.iqr != "auto"){
     selected.iqr <- unname(unlist(nl[selected.iqr]))
+    }
   }
   if (is.numeric(by.var)) {
     by <- dataFrame[, by.var]
@@ -369,15 +417,15 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
       }
       if (is.numeric(selected.dataFrame[, 1, drop = TRUE]) | is.logical(selected.dataFrame[, 1, drop = TRUE])) {
         if (means) {
-          tablei <- c(tablei, round(mean(as.numeric(dataFrame[, i]), na.rm = TRUE), digits = decimal))
+          tablei <- c(tablei, sprintf(paste0("%.", decimal, "f"), mean(as.numeric(dataFrame[, i]), na.rm = TRUE)))
           names(tablei)[length(tablei)] <- "mean"
         }
         if (medians) {
-          tablei <- c(tablei, round(median(as.numeric(dataFrame[, i]), na.rm = TRUE), digits = decimal))
+          tablei <- c(tablei, sprintf(paste0("%.", decimal, "f"), median(as.numeric(dataFrame[, i]), na.rm = TRUE)))
           names(tablei)[length(tablei)] <- "median"
         }
         if (sds) {
-          tablei <- c(tablei, round(sd(as.numeric(dataFrame[, i]), na.rm = TRUE), digits = decimal))
+          tablei <- c(tablei, sprintf(paste0("%.", decimal, "f"), sd(as.numeric(dataFrame[, i]), na.rm = TRUE)))
           names(tablei)[length(tablei)] <- "sd"
         }
       }
@@ -428,13 +476,13 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
       if (total) {
         results <- rbind(results, rep("", reverse || suppressWarnings(!is.null(vars.to.reverse)) + (maxlevel + 1 - minlevel) + (count + means + medians + sds + var.labels)))
         results[nrow(results), countCol] <- length((rowSums(selected.dataFrame))[!is.na(rowSums(selected.dataFrame))])
-        results[nrow(results), meanCol] <- round(mean.of.total.scores, digits = decimal)
-        results[nrow(results), sdCol] <- round(sd.of.total.scores, digits = decimal)
+        results[nrow(results), meanCol] <- sprintf(paste0("%.", decimal, "f"), mean.of.total.scores)
+        results[nrow(results), sdCol] <- sprintf(paste0("%.", decimal, "f"), sd.of.total.scores)
         rownames(results)[nrow(results)] <- " Total score"
         results <- rbind(results, rep("", reverse || suppressWarnings(!is.null(vars.to.reverse)) + (maxlevel + 1 - minlevel) + (count + means + medians + sds + var.labels)))
         results[nrow(results), countCol] <- length(rowSums(selected.dataFrame)[!is.na(rowSums(selected.dataFrame))])
-        results[nrow(results), meanCol] <- round(mean.of.average.scores, digits = decimal)
-        results[nrow(results), sdCol] <- round(sd.of.average.scores, digits = decimal)
+        results[nrow(results), meanCol] <- sprintf(paste0("%.", decimal, "f"), mean.of.average.scores)
+        results[nrow(results), sdCol] <- sprintf(paste0("%.", decimal, "f"), sd.of.average.scores)
         rownames(results)[nrow(results)] <- " Average score"
       }
     }
@@ -661,7 +709,7 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
             p.value <- fisher.test(x0, simulate.p.value = simulate.p.value)$p.value
           }
           else {
-            test.method <- paste("Chisq. (", suppressWarnings(chisq.test(x0)$parameter), " df) = ", suppressWarnings(round(chisq.test(x0)$statistic, decimal + 1)), sep = "")
+            test.method <- paste("Chisq. (", suppressWarnings(chisq.test(x0)$parameter), " df) = ", suppressWarnings(sprintf(paste0("%.", decimal+1, "f"), chisq.test(x0)$statistic)), sep = "")
             p.value <- suppressWarnings(chisq.test(x0)$p.value)
           }
         }
@@ -817,11 +865,11 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
             }
             else {
               if (length(levels(by1)) > 2) {
-                test.method <- paste("ANOVA F-test (", anova(lm(dataFrame[, selected[i]] ~ by1))[1, 1], ", ", anova(lm(dataFrame[, selected[i]] ~ by1))[2, 1], " df) = ", round(anova(lm(dataFrame[, selected[i]] ~ by1))[1, 4], decimal + 1), sep = "")
+                test.method <- paste("ANOVA F-test (", anova(lm(dataFrame[, selected[i]] ~ by1))[1, 1], ", ", anova(lm(dataFrame[, selected[i]] ~ by1))[2, 1], " df) = ", sprintf(paste0("%.", decimal+1, "f"), anova(lm(dataFrame[, selected[i]] ~ by1))[1, 4]), sep = "")
                 p.value <- anova(lm(dataFrame[, selected[i]] ~ by1))[1, 5]
               }
               else {
-                test.method <- paste("t-test", paste(" (", t.test(dataFrame[, selected[i]] ~  by1, var.equal = TRUE)$parameter, " df)", sep = ""), "=", round(abs(t.test(dataFrame[, selected[i]] ~ by1, var.equal = TRUE)$statistic), decimal + 1))
+                test.method <- paste("t-test", paste(" (", t.test(dataFrame[, selected[i]] ~  by1, var.equal = TRUE)$parameter, " df)", sep = ""), "=", sprintf(paste0("%.", decimal+1, "f"), abs(t.test(dataFrame[, selected[i]] ~ by1, var.equal = TRUE)$statistic)))
                 p.value <- t.test(dataFrame[, selected[i]] ~ by1, var.equal = TRUE)$p.value
               }
             }
@@ -830,7 +878,7 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
       }
       if (test) {
         if (name.test) {
-          label.row <- c(rep("", length(levels(by1)) + total.column + NAcol), test.method, ifelse(p.value < 0.001, "< 0.001", round(p.value, decimal + 2)))
+          label.row <- c(rep("", length(levels(by1)) + total.column + NAcol), test.method, ifelse(p.value < 0.001, "< 0.001", sprintf(paste0("%.", decimal+2, "f"), p.value)))
           label.row <- t(label.row)
                     if (total.column) {
                       if(NAcol){
@@ -856,7 +904,7 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
         else {
           label.row <- c(rep("", length(levels(by1)) +
                                total.column + NAcol), ifelse(p.value < 0.001, "< 0.001",
-                                                     round(p.value, decimal + 2)))
+                                 sprintf(paste0("%.", decimal+2, "f"), p.value)))
           label.row <- t(label.row)
           if (total.column && NAcol){
             colnames(label.row) <- c(levels(by1), "NA", "Total", "P value")

@@ -54,6 +54,21 @@
 #'
 #' @param colnames For \code{rm.dummy.columns} this is the names of the columns to be tested and deleted inside \code{dummy.columns}.
 #'
+#' @param u A number indicating the total amount of ICUs in the data.
+#'
+#' @param z_score A numeric vector indicating the standardized Pearson residual or the "naive" Z-Score for each unit.
+#'
+#' @param y A numeric vector representing the "Standardized rate" for each unit, usually the SMR or possibly the SRU , accordind to \code{y.type}.
+#' @param totalObserved The quantity of observed death in all units.
+#' @param totalAdmissions The quantity of admissions in all units.
+#' @param p A number between 0 and 1 indicating the confidence interval level for the funnel.
+#' @param theta Target value which specifies the desired expectation for institutions considered "in control".
+#' @param dist A character specifying the distribution about the funnel control limits will be estimated. It can be "binomial" (default), "normal" or "poisson".
+#' @param rho A numeric vector representing the funnel precision parameter. It is calculated inside \code{funnel} and used to calculer \code{z_score}.
+#' @param gdetheta A numeric auxiliary numeric vector used to calculate \code{z_score} to be used to calculate estimate funnel control limits.
+#' @param range A numeric range representing for which values the funnel will be estimated. Usually the same variable in x axis (the precision parameter).
+#' @param overdispersion Logical (default = FALSE); If TRUE, introduces an multiplicative over-dispersion factor phi that will inflate the CI null variance. See \code{funnel} details.
+#'
 #' @author Lunna Borges & Pedro Brasil
 #'
 #' @seealso \code{\link{dataquality}}
@@ -292,4 +307,131 @@ rm.dummy.columns <- function (data, colnames, event = "1", min.events = 50, warn
   }
   data[, col.index[cond.table]] <- list(NULL)
   data
+}
+
+#' @rdname miscellaneous
+#' @export
+funnelEstimate <- function(y, range, u, totalAdmissions, totalObserved, p = .95, theta = 1, overdispersion = TRUE, dist = c("binomial","normal","poisson"), rho, gdetheta){
+
+  if (!is.numeric(y)){stop("y must be numeric.")}
+  if (!is.numeric(u)){stop("u must be numeric.")}
+  if (!is.numeric(range)){stop("range must be numeric.")}
+  if (!is.numeric(p)){stop("p must be numeric.")}
+  if (!is.numeric(theta)){stop("theta must be numeric.")}
+  if (!is.logical(overdispersion)){stop("overdispersion must be TRUE or FALSE.")}
+  if (dist[1] != "binomial" && dist[1] != "normal" && dist[1] != "poisson"){stop("dist must be either 'binomial', 'normal' or 'poisson'.")}
+
+  #MISSING VERIFICATION FOR RHO AND GDETHETA
+
+
+  # Calculate the z-score
+  z_score <- (y - theta) * sqrt( rho / gdetheta)
+
+  # Calculate the Winsorised estimate
+  # Used when overdispersion of the indicator
+  phi <- winsorising(z_score, u = u)
+
+
+  if(dist[1] == "binomial"){
+    warning("It is being used exact (binomial) distribuition to draw the funnel plot.")
+
+    if (!is.numeric(totalAdmissions)){stop("totalAdmissions must be numeric.")}
+    if (!is.numeric(totalObserved)){stop("totalObserved must be numeric.")}
+
+   # estimativa da probabilidade de ocorrer um evento da binomial
+    prob <- totalObserved/totalAdmissions
+    # creating binomial quantiles
+    rp <- qbinom(p, size = range, prob)
+    # correction parameter
+    alpha <- (pbinom(rp, size = range, prob) - p) / ((pbinom(rp, size = range, prob)) - pbinom(rp - 1, size = range, prob))
+
+    if( overdispersion & phi > (1 + 2 * sqrt( 2 / u )) ){
+      warning("The funnel limits were inflated due overdispersion presence.")
+      # funnel confidence intervals
+      upperCI <- theta + (rp - alpha) * sqrt(phi) / range
+      lowerCI <- theta - (rp - alpha) * sqrt(phi) / range
+    } else {
+      # funnel confidence intervals
+      upperCI <- theta + (rp - alpha) / range
+      lowerCI <- theta - (rp - alpha) / range
+    }
+  }
+
+  if(dist[1] == 'normal'){
+    warning("It is being used normal approximation to draw the funnel plot.")
+
+    zp <- qnorm(1 - (1 - p) / 2)
+
+    if ( overdispersion & phi > (1 + 2 * sqrt( 2 / u )) ){
+      warning("The funnel limits were inflated due overdispersion presence.")
+
+      upperCI <- theta + zp * sqrt(theta * phi / range)
+      lowerCI <- theta - zp * sqrt(theta * phi / range)
+
+    }
+    else {
+        upperCI <- theta + zp * sqrt(gdetheta / range)
+        lowerCI <- theta - zp * sqrt(gdetheta / range)
+    }
+  }
+
+  if(dist[1] == "poisson"){
+    warning("It is being used exact (poisson) distribuition to draw the funnel plot.")
+
+    lambda <- theta
+
+    rp <- qpois(p, lambda)
+    alpha <- (ppois(rp, lambda) - p) / (ppois(rp, lambda) - ppois(rp - 1, lambda))
+
+    if ( overdispersion & phi > (1 + 2 * sqrt( 2 / u )) ){
+      warning("The funnel limits were inflated due overdispersion presence.")
+
+      upperCI <- theta + (rp - alpha) * sqrt(phi) / range
+      lowerCI <- theta - (rp - alpha) * sqrt(phi) / range
+
+    }
+    else {
+
+      upperCI <- theta + (rp - alpha) / range
+      lowerCI <- theta - (rp - alpha) / range
+
+    }
+
+  }
+
+  output <- list("upperCI" = upperCI, "lowerCI" = lowerCI, "rho" = rho)
+
+  return(output)
+
+}
+#' @rdname miscellaneous
+#' @export
+winsorising <- function(z_score, u){
+  if (!is.numeric(z_score)){stop("z_score must be numeric.")}
+  if (!is.numeric(u)){stop("u must be numeric.")}
+  if (length(u) != 1){stop("u must be of length 1.")}
+  #### observe deciles to see if there is NA in 90 percentile
+  #### it works to avoid problem to calculate phi if a z_score doesn't have 90 quantile
+  deciles <- quantile(z_score, probs = seq(0,1,.1), na.rm = T)
+  if (any(is.na(deciles[10]))){
+    highestQuantile <- as.numeric((which(is.na(deciles))[1]-2)/10)
+  } else { highestQuantile <- 0.9 }
+
+  # Calculate the 10% and 90% percentiles.
+  q90 <- quantile(z_score,probs=c(highestQuantile), na.rm = T)
+  q10 <- quantile(z_score,probs=c(0.1), na.rm = T)
+
+  # Set z-scores larger than the 90% percentile to the 90% percentile.
+  z_score <- ifelse(z_score>q90,q90,z_score)
+
+  # Set z-scores smaller than the 10% percentile to the 10% percentile.
+  z_score <- ifelse(z_score<q10,q10,z_score)
+
+  # Calculate the Winsorised estimate
+  # Used when overdispersion of the indicator
+  phi <- (1 / u) * sum(z_score ^ 2, na.rm = T)
+
+  return(phi)
+
+
 }

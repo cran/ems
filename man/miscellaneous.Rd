@@ -9,6 +9,8 @@
 \alias{trunc_num}
 \alias{dummy.columns}
 \alias{rm.dummy.columns}
+\alias{funnelEstimate}
+\alias{winsorising}
 \title{Miscellaneous functions for data editing}
 \usage{
 f.num(num.var)
@@ -27,6 +29,12 @@ dummy.columns(data, original.column, factors, scan.oc = FALSE, sep = ",",
 
 rm.dummy.columns(data, colnames, event = "1", min.events = 50,
   warn = FALSE)
+
+funnelEstimate(y, range, u, totalAdmissions, totalObserved, p = 0.95,
+  theta = 1, overdispersion = TRUE, dist = c("binomial", "normal",
+  "poisson"), rho, gdetheta)
+
+winsorising(z_score, u)
 }
 \arguments{
 \item{num.var}{A character, or factor variable to be formated as numeric.}
@@ -37,7 +45,7 @@ rm.dummy.columns(data, colnames, event = "1", min.events = 50,
 
 \item{replace}{By default, NA. But could be any vector of length 1.}
 
-\item{console.output}{Logical. Print at the console a few information about the "" fields?}
+\item{console.output}{Logical. Print at the console a few informations about the " " fields?}
 
 \item{x, nc}{For \code{tab2tex} x is a object from epiDisplay::tableStack. nc is the number of the last column to keep in the table. If the table has 5 columns and nc = 3, then columns 4 and 5 are removed. For \code{trunc_num}, x is a numeric vector.}
 
@@ -66,15 +74,39 @@ rm.dummy.columns(data, colnames, event = "1", min.events = 50,
 \item{colnames}{For \code{rm.dummy.columns} this is the names of the columns to be tested and deleted inside \code{dummy.columns}.}
 
 \item{event}{A character string to be detected as a event. In \code{rm.dummy.columns}, if the columns are coded as '0' and '1', the event is '1', if it is coded as logical, the events is 'TRUE'.}
+
+\item{y}{A numeric vector representing the "Standardized rate" for each unit, usually the SMR or possibly the SRU , accordind to \code{y.type}.}
+
+\item{range}{A numeric range representing for which values the funnel will be estimated. Usually the same variable in x axis (the precision parameter).}
+
+\item{u}{A number indicating the total amount of ICUs in the data.}
+
+\item{totalAdmissions}{The quantity of admissions in all units.}
+
+\item{totalObserved}{The quantity of observed death in all units.}
+
+\item{p}{A number between 0 and 1 indicating the confidence interval level for the funnel.}
+
+\item{theta}{Target value which specifies the desired expectation for institutions considered "in control".}
+
+\item{overdispersion}{Logical (default = FALSE); If TRUE, introduces an multiplicative over-dispersion factor phi that will inflate the CI null variance. See \code{funnel} details.}
+
+\item{dist}{A character specifying the distribution about the funnel control limits will be estimated. It can be "binomial" (default), "normal" or "poisson".}
+
+\item{rho}{A numeric vector representing the funnel precision parameter. It is calculated inside \code{funnel} and used to calculer \code{z_score}.}
+
+\item{gdetheta}{A numeric auxiliary numeric vector used to calculate \code{z_score} to be used to calculate estimate funnel control limits.}
+
+\item{z_score}{A numeric vector indicating the standardized Pearson residual or the "naive" Z-Score for each unit.}
 }
 \description{
-Collections of functions for data editing usually used as lower levels for other functions.
+Collection of functions for data editing, usually used as lower levels for other functions.
 
 \code{f.num} is a wrapper to format numeric variables that are stored as character or factor, simultaneously it will try to detect comma spearated and replace it by dots before formating the variable as numeric. Any non-numeric encoding will be coerced to NA.
 
 \code{f.date} is a wrapper either to \code{\link[base]{as.Date}} or \code{\link[base]{strptime}} to format character or factor variables into dates. In Epimed Solutions database there are a few pre-specified formats that \code{f.date} will try to detect and return a formated date. \code{f.date} will try to dected if more than half of the elements in a vector have a pre-specified format. If so, the remaining will be coerced to NA if they have different format from the detected. See example.
 
-\code{remove.na} identifies all the empties spaces, i.e. the " " cells, of character or factor variables in a data.frame and returns the same data.frame with these empty cells replaced, by default, by NAs. It does not matter the length of the empty spaces. Also, \code{remove.na} trims the leading and trailing empty spaces from all character and factor variables. It does not format the numeric variables. It may also returns at the console a few information about the " " fields.
+\code{remove.na} identifies all the empty spaces, i.e. the " " cells, of character or factor variables in a data.frame and returns the same data.frame with these empty cells replaced, by default, by NAs. It does not matter the length of the empty spaces. Also, \code{remove.na} trims the leading and trailing empty spaces from all character and factor variables. It does not format the numeric variables. It may also return at the console a few information about the " " fields.
 
 \code{tab2tex} removes the empty rows, and also tunrs the rownames of a table epiDisplay::tableStack into the first column, to make it easier to paste the table into a rtf or latex document without empty rows or rownames conflicts.
 

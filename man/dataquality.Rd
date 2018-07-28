@@ -9,7 +9,7 @@
 \alias{t_date}
 \alias{date.table}
 \alias{rm.unwanted}
-\title{Collection of functions to check data quality in a dataset, and remove not valid or extreme values.}
+\title{Collection of functions to check data quality in a dataset and remove not valid or extreme values.}
 \usage{
 t_factor(data, variable, legal, var.labels = attr(data,
   "var.labels")[match(variable, names(data))], digits = 3)
@@ -38,17 +38,17 @@ rm.unwanted(data, limits = NULL, num.limits = TRUE, try.keep = TRUE,
 \arguments{
 \item{data}{A data.frame where variables will be tested.}
 
-\item{variable}{Acharacter vector of length one, indicating the variable name in dataset to be tested.}
+\item{variable}{A character vector of length one, indicating the name of the variable in the dataset to be tested.}
 
 \item{legal}{A character vector representeing the expected levels of the tested variable.}
 
-\item{var.labels}{Variables labels to nice output. Must be iformed in the same order as variable argument. By default, it captures the labels stored in attr(data, "var.labels"), if any. If not infomred, the function returns the variables names.}
+\item{var.labels}{Variables labels for a nice output. Must be informed in the same order as variable argument. By default, it captures the labels stored in attr(data, "var.labels"), if any. If not informed, the function returns the variables names.}
 
-\item{digits}{Decimal for rounding.}
+\item{digits}{Number of decimal places for rounding.}
 
-\item{limits}{a list of two or more lists, each containing the arguments variable name and legal levels (in this order), to check the factor variables. In the case of \code{rm.unwanted}, if left NULL, it means no numeric variable will be checked. See examples.}
+\item{limits}{a list of two or more lists, each containing the arguments variable name and legal levels (in this order), to check on the factor variables. In the case of \code{rm.unwanted}, if left NULL, it means no numeric variable will be checked. See examples.}
 
-\item{num.var}{A character vector indicating the name of a variable that should be numeric (althoug it can yet be formated as character or factor).}
+\item{num.var}{A character vector indicating the name of a variable that should be numeric (although it can yet be formated as character or factor).}
 
 \item{num.max, num.min}{The maximal and minimal limits of acceptable range of a numeric variable.}
 
@@ -58,24 +58,24 @@ rm.unwanted(data, limits = NULL, num.limits = TRUE, try.keep = TRUE,
 
 \item{date.max, date.min}{The maximal and minimal limits of acceptable range of a date variable.}
 
-\item{format.date}{Default is "auto". If so, \code{t_date} will use \code{\link{f.date}} to detect the date format and format it as date. If not "auto", it should be a date format to be passed to \code{\link[base]{as.Date}} format argument. If \code{format.date} is missspecified, then \code{t_date} and \code{date.table} will identify all dates as non-dates. For \code{date.table}, if it is set to 'auto' , it will use \code{\link{f.date}} to detect the date format and format it as date. If different from 'auto', one should specify the desired date formats in the date.limits data.frame. See example.}
+\item{format.date}{Default is "auto". If so, \code{t_date} will use \code{\link{f.date}} to detect the date format and format it as date. If not set to "auto", it should be a date format to be passed to \code{\link[base]{as.Date}} format argument. If \code{format.date} is misspecified, then \code{t_date} and \code{date.table} will identify all dates as non-dates. For \code{date.table}, if it is set to 'auto' , it will use \code{\link{f.date}} to detect the date format and format it as date. If different from 'auto', one should specify the desired date formats in the date.limits data.frame. See example.}
 
 \item{date.limits}{A \code{data.frame} with the following variables: date.var, date.max, date.min, and (optionaly) format.date. These represent values of the arguments above. See example.}
 
-\item{try.keep}{Default is \code{TRUE}. If \code{TRUE}, \code{remove.unwanted} will first trim all empty spaces and transform all levels to lower characters before comparing the found levels to expected levels of a character/factor variables. Therefore, found levels such as "yes  " will be considered identical to the expected level "Yes", and will not be coerced to \code{NA}.}
+\item{try.keep}{Default is \code{TRUE}. If \code{TRUE}, \code{remove.unwanted} will first trim all empty spaces and transform all levels to lower case characters before comparing the found levels and expected levels of a character/factor variable. Therefore, found levels such as "yes  " will be considered identical to the expected level "Yes", and will not be coerced to \code{NA}.}
 
 \item{stringAsFactors}{In \code{rm.unwanted}, if set to \code{TRUE}, the default value, variables in the limits argument that are character and numeric variables in data will be returned as factors. Logical variables are skipped. However, a variable will be returned as logical if it is originally a factor but its final levels are \code{TRUE} and \code{FALSE} and \code{stringAsFactors = FALSE}.}
 }
 \description{
-These functions return the counts and fractions of expected values, unexpected values, missing values and non valid values. They are able to do it with factor variables, numeric variables and date variables. \code{t_factor}, \code{t_num}, and \code{t_date} do the job for a single variable and have simpler arguments, while \code{factor.table}, \code{num.table}, and \code{date.table} do the job for several variables at once. \code{rm.unwanted} cheks the factor and numeric variables and remove the not valid or extreme values. This approach is attractive before data imputation. They all return a \code{data.frame}.
+These functions return the counts and fractions of expected values, unexpected values, missing values and not valid values. They are able to do it with factor variables, numeric variables and date variables. \code{t_factor}, \code{t_num}, and \code{t_date} do the job for a single variable and have simpler arguments, while \code{factor.table}, \code{num.table}, and \code{date.table} do the job for several variables at once. \code{rm.unwanted} cheks the factor and numeric variables and remove the not valid or extreme values. This approach is attractive before data imputation. They all return a \code{data.frame}.
 
-\code{t_factor} and \code{factor.table} will try to get factor or character variables and check how much of its content match with the expectd. They will try to treat the levels or cells with " " as \code{NAs}.
+\code{t_factor} and \code{factor.table} will try to get factor or character variables and check how much of its content match with the expectd. They will try to treat the levels or cells containing " " as \code{NAs}.
 
-\code{t_num} will try to get a numeric variable (even if it is currently formated as character or factor) and check how much of its content are expected (match a desired range), unexpected, non-numeric values and missing vlaues. \code{num.table} does the same thing, but with two or more variables at once.
+\code{t_num} will try to get a numeric variable (even if it is currently formated as character or factor) and check how much of its content is expected (match a desired range), unexpected, non-numeric values and missing vlaues. \code{num.table} does the same, but for two or more variables at once.
 
-\code{t_date} will try to get a date variable (even if it is currently formated as character or factor) and check how much of its content are expected (match a desired range), unexpected, non-date values and missing vlaues. \code{date.table} does the same thing, but with two or more variables at once.
+\code{t_date} will try to get a date variable (even if it is currently formated as character or factor) and check how much of its content is expected (match a desired range), unexpected, non-date values and missing vlaues. \code{date.table} does the same, but for two or more variables at once.
 
-\code{rm.unwanted} will chek in data the variables specified in the limits objects according to the limits specified for each variable. If there are levels considered not valid in a factor variable, these levels are deleted. For example, if Sex is expected to be "M" and "F", and there is also a "I" level in data, all "I" are replaced by \code{NA}. Similarly, misspelled levels will be understood as non-valid levels and coercerd to \code{NA}, with the exception of leading or trailing empty spaces and lower and upper cases diferences if \code{try.keep = TRUE}. If there is a continuous numeric variable and it is expected to have values ranging from 30 to 700, the values outside this range, i.e. higher then 700 or lower then 30, are replaced by \code{NA}. Non-numeric elements, i.e. non-valid elements that should be numeric, will also be coerced to \code{NA}. If a variable is specified in \code{num.limits}, then it will be returned as numeric variable, even if it was formated as factor or character. If a variable is specified in limits, the returnig format will depend on the \code{stringAsFactors} argument, unless it is formated as logical. In this case it is skipped. The arguments \code{limits} and \code{num.limits} may be \code{NULL}, meaning that the factor-character varibles or the numeric variables , respectively, will not be edited.
+\code{rm.unwanted} will chek in data the variables specified in the limits object according to the limits specified for each variable. If there are levels considered not valid in a factor variable, these levels are deleted. For example, if Sex is expected to be "M" and "F", and there is also an "I" level in data, every "I" is replaced by \code{NA}. Similarly, misspelled levels will be understood as non-valid levels and coercerd to \code{NA}, with the exception of leading or trailing empty spaces and lower and upper cases diferences if \code{try.keep = TRUE}. If there is a continuous numeric variable and it is expected to have values ranging from 30 to 700, the values outside this range, i.e. higher then 700 or lower then 30, are replaced by \code{NA}. Non-numeric elements, i.e. non-valid elements that should be numeric, will also be coerced to \code{NA}. If a varible is specified in \code{num.limits}, then it will be returned as a numeric variable, even if it was formated as factor or character. If a variable is specified in limits, the returnig format will depend on the \code{stringAsFactors} argument, unless it is formated as logical. In this case it is skipped. The arguments \code{limits} and \code{num.limits} may be \code{NULL}, meaning that the factor-character variables or the numeric variables , respectively, will not be edited.
 }
 \examples{
 # Simulating a dataset with 5 factor variables and assigning labels

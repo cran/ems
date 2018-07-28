@@ -36,9 +36,9 @@ forest.SMR(x, mar1 = c(5.1, 1, 4.1, 1), mar.SMR = c(5.1, 7, 4.1, 1),
   grid = TRUE, digits = 3)
 }
 \arguments{
-\item{obs.var}{Observed death. Accepted values are 0 (absence) or 1 (presence) in a vector. For \code{SMR.table} is must be a character indicating the name of the variable in data.}
+\item{obs.var}{Observed death. Accepted values are 0 (absence) or 1 (presence) in a vector. For \code{SMR.table} it must be a character indicating the name of the variable in the data.}
 
-\item{pred.var}{Death individual predictions (ranging from 0 to 1) in a vector. For \code{SMR.table} is must be a character indicating the name of the variable in data.}
+\item{pred.var}{Death individual predictions (ranging from 0 to 1) in a vector. For \code{SMR.table} it must be a character indicating the name of the variable in the data.}
 
 \item{digits}{Number of digits for rounding the output.}
 
@@ -48,13 +48,13 @@ forest.SMR(x, mar1 = c(5.1, 1, 4.1, 1), mar.SMR = c(5.1, 7, 4.1, 1),
 
 \item{data}{For \code{SMR.table}, a dataset where pred.var, obs.var and group.var are in.}
 
-\item{group.var}{For \code{SMR.table}, this is a character vector indicating the name(s) of the variable(s) in data will form the groups in where SMR will be calculated. Must be factor variables.}
+\item{group.var}{For \code{SMR.table}, this is a character vector indicating the name(s) of the variable(s) in the data that will form the groups where SMR will be calculated. The variables must be factors.}
 
 \item{use.label}{Logical. Default is FALSE. For \code{SMR.table} this option will replace the variables names by its labels in var.labels argument.}
 
 \item{var.labels}{A character vector with variables labels. The default is to replace the variable name by the label stored at attr(data, "var.labels"). But one may specify labels directly.}
 
-\item{reorder}{Default is "no". Possible values are: "no", "SMR","lower.Cl", and "upper.Cl". Will make the \code{SMR.table} to be ordered within each varibale by its original order, or by SMR order, or by lower.Cl order, or by upper.Cl.}
+\item{reorder}{Default is "no". Possible values are: "no", "SMR","lower.Cl", and "upper.Cl". It will make the \code{SMR.table} to be ordered within each varibale by its original order, or by SMR order, or by lower.Cl order, or by upper.Cl.}
 
 \item{decreasing}{Logical. When 'reorderd' is TRUE, should the order be decreasing or incresing? See \code{\link[base]{order}}}
 
@@ -62,39 +62,39 @@ forest.SMR(x, mar1 = c(5.1, 1, 4.1, 1), mar.SMR = c(5.1, 7, 4.1, 1),
 
 \item{mar1, mar.SMR}{Values to set the margins (mar parameter) of left and right windows. See \code{\link[graphics]{par}}}
 
-\item{overall.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the overall label. Internally  and 'y' coordinate is replaced.}
+\item{overall.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the overall label. Internally, 'y' coordinate is replaced.}
 
-\item{NOE.overall.args}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the overall N (number of observations), O (observed deaths) and E (expected deaths). Internally 'labels' and 'y' arguments are replaced.}
+\item{NOE.overall.args}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the overall N (number of observations), O (observed deaths) and E (expected deaths). Internally, 'labels' and 'y' arguments are replaced.}
 
-\item{var.labels.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the variables labels. Internally  and 'y' coordinate is replaced.}
+\item{var.labels.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the variables labels. Internally, 'y' coordinate is replaced.}
 
-\item{cat.labels.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the categories labels. Internally  and 'y' coordinate is replaced.}
+\item{cat.labels.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the categories labels. Internally, 'y' coordinate is replaced.}
 
-\item{N.values.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the values of N (number of observations) of each subgroup. Internally the arguments 'label' and 'y' coordinate are replaced.}
+\item{N.values.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the values of N (number of observations) of each subgroup. Internally, the arguments 'label' and 'y' coordinate are replaced.}
 
-\item{O.values.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the values of Observed deaths of each subgroup. Internally the arguments 'label'  and 'y' coordinate are replaced.}
+\item{O.values.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the values of Observed deaths of each subgroup. Internally, the arguments 'label'  and 'y' coordinate are replaced.}
 
-\item{E.values.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the values of Expected deaths of each subgroup. Internally the arguments 'label'  and 'y' coordinate are replaced.}
+\item{E.values.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the values of Expected deaths of each subgroup. Internally, the arguments 'label' and 'y' coordinate are replaced.}
 
-\item{NOE.head.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the labels of the columns N, E and O on the top of the graph. Internally the 'x' and 'y' coordinate are replaced. The x coordinates are taken from the x in N.values.arg, O.values.arg and E.values.arg.}
+\item{NOE.head.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the labels of the columns N, E and O on the top of the graph. Internally, the 'x' and 'y' coordinates are replaced. The x coordinates are taken from the x in \code{N.values.arg}, \code{O.values.arg} and \code{E.values.arg}.}
 
-\item{Overall.seg.arg}{A list of arguments passed to \code{\link[graphics]{segments}} for ploting the lines corresponding to overall SMR confidence intervals. Internally 'x' and 'y' coordinates are replaced.}
+\item{Overall.seg.arg}{A list of arguments passed to \code{\link[graphics]{segments}} for plotting the lines corresponding to overall SMR confidence intervals. Internally, 'x' and 'y' coordinates are replaced.}
 
-\item{Overall.p.arg}{A list of arguments passed to \code{\link[graphics]{points}} for ploting the points corresponding to overall SMR. Internally 'x' and 'y' coordinates are replaced.}
+\item{Overall.p.arg}{A list of arguments passed to \code{\link[graphics]{points}} for plotting the points corresponding to overall SMR. Internally, 'x' and 'y' coordinates are replaced.}
 
-\item{Overall.est.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the overall SMR beside the graph. Internally 'y' coordinate and 'label' argument are replaced.}
+\item{Overall.est.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the overall SMR beside the graph. Internally, 'y' coordinate and 'label' argument are replaced.}
 
-\item{cat.seg.arg}{A list of arguments passed to \code{\link[graphics]{segments}} for ploting the lines corresponding to SMR confidence intervals for all groups. Internally 'x' and 'y' coordinates are replaced.}
+\item{cat.seg.arg}{A list of arguments passed to \code{\link[graphics]{segments}} for plotting the lines corresponding to SMR confidence intervals for all groups. Internally, 'x' and 'y' coordinates are replaced.}
 
-\item{cat.p.arg}{A list of arguments passed to \code{\link[graphics]{points}} for ploting the points corresponding to all categoreis SMR. Internally 'x' and 'y' coordinates are replaced.}
+\item{cat.p.arg}{A list of arguments passed to \code{\link[graphics]{points}} for plotting the points corresponding to all categoreis SMR. Internally, 'x' and 'y' coordinates are replaced.}
 
-\item{cat.est.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the categories SMR beside the graph. Internally 'y' coordinate and 'label' arguments are replaced.}
+\item{cat.est.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the categories SMR beside the graph. Internally, 'y' coordinate and 'label' arguments are replaced.}
 
-\item{SMR.head.arg}{A list of arguments passed to \code{\link[graphics]{text}} for ploting the label of the SMR column on the top of the graph. Internally the 'and 'y' coordinate is replaced.}
+\item{SMR.head.arg}{A list of arguments passed to \code{\link[graphics]{text}} for plotting the label of the SMR column on the top of the graph. Internally, the 'y' coordinate is replaced.}
 
 \item{smr.xlab}{Label of the x axis. Default is "Standardized Mortality Ratio".}
 
-\item{smr.xlim}{Limits of x axis of the \code{forest.SMR} plot. Default is "auto", which internally will pick the highest values of all upper.Cl and the lowest lower.Cl. Besides "auto", only a vector of 2 numbers are valid, and will be passed to \code{\link[graphics]{plot.default}}.}
+\item{smr.xlim}{Limits of x axis of the \code{forest.SMR} plot. Default is "auto", which internally will pick the highest values of all upper.Cl and the lowest lower.Cl. Besides "auto", only a vector of 2 numbers is valid, and will be passed to \code{\link[graphics]{plot.default}}.}
 
 \item{grid}{Logical. If TRUE (default), it will draw a grid with the \code{\link[graphics]{grid}} default arguments.}
 }
@@ -110,14 +110,14 @@ If SMR, then:
 }
 
 If SMR.table, then a data.frame with the same information as above, and the
- additional information: "Variables" (variables names), "Levels" (variables levels).
+ additional information is returned: "Variables" (variables names), "Levels" (variables levels).
 
 If forest.SMR, then a plot is returned.
 }
 \description{
 Calculates the standardized mortality ratio and its confidence interval. SMR, for a group, is defined as the ratio of the observed deaths in this group and the sum of the predicted individual probabilities of death by any model (expected deaths).
 
-\code{SMR.table} estimate at once the overall SMR and the SMR across several groups, e.g. ICU units or clinical characteristics. The \code{SMR.table} can be ordered by the SMR estimate or its confidence intervals, facilitating the comparinson of the units ranks.
+\code{SMR.table} estimates at once the overall SMR and the SMR across several groups, e.g. ICU units or clinical characteristics. The \code{SMR.table} can be ordered by the SMR estimate or its confidence intervals, facilitating the comparison of the units ranks.
 
 \code{forest.SMR} shows the \code{SMR.table} output as a forest plot. The plot opens two windows and plot at the left side the values from the \code{SMR.table} and at the right side the points and lines graphically representing each SMR and its confidence interval.
 }

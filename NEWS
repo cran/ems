@@ -1,0 +1,18 @@
+ems v1.2.00 (Release date: 2018-07-23)
+
+1- New functions: calcurve and mortality.
+
+
+==============
+ems v1.1.06 (Release date: 2018-06-14)
+
+1- Improvement of funnel function;
+2- New intermediate functions: dummy.columns, rm.dummy.columns, funnelEstimate and winsorising;
+3- Improvements in documentation;
+4- Now SMR.table function says which levels were deleted due to zero observations;
+
+
+==============
+ems v1.0.00 (Release date: 2017-05-18)
+
+    Submited to CRAN.
