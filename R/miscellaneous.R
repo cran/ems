@@ -365,8 +365,8 @@ funnelEstimate <- function(y, range, u, totalAdmissions, totalObserved, p = .95,
     if ( overdispersion & phi > (1 + 2 * sqrt( 2 / u )) ){
       warning("The funnel limits were inflated due overdispersion presence.")
 
-      upperCI <- theta + zp * sqrt(theta * phi / range)
-      lowerCI <- theta - zp * sqrt(theta * phi / range)
+      upperCI <- theta + zp * sqrt(gdetheta * phi / range)
+      lowerCI <- theta - zp * sqrt(gdetheta * phi / range)
 
     }
     else {
