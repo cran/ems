@@ -8,16 +8,17 @@
 \usage{
 calcurve(deaths, pred, score = NULL, name_score = "Saps3",
   other_score = NULL, name_other_score = NULL,
-  categories_option = c("predicted", "score"), table = FALSE, plot = TRUE,
-  title_label = "Calibration Curve", y1axis_label = "Patients (n)",
-  y2axis_label = "Mortality Rate (\%)", score_color = c("#cac7cc",
-  "#ffc341", "#33cca3"), bar_color = "#1f77b4", points = c(19, 18, 17))
+  categories_option = c("predicted", "score"), table = FALSE,
+  plot = TRUE, title_label = "Calibration Curve",
+  y1axis_label = "Patients (n)", y2axis_label = "Mortality Rate (\%)",
+  score_color = c("#cac7cc", "#ffc341", "#33cca3"),
+  bar_color = "#1f77b4", points = c(19, 18, 17))
 
 \method{print}{calcurve}(x, ...)
 
-\method{plot}{calcurve}(x, ..., main = x$title_label, text = x$y2axis_label,
-  ylab = x$y1axis_label, col = c(x$bar_color, x$score_color),
-  pch = x$points)
+\method{plot}{calcurve}(x, ..., main = x$title_label,
+  text = x$y2axis_label, ylab = x$y1axis_label, col = c(x$bar_color,
+  x$score_color), pch = x$points)
 }
 \arguments{
 \item{deaths}{a numerical vector that only contains 0 and 1, indicating whether the patient was alive or dead, respectively.}

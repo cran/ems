@@ -5,14 +5,16 @@
 \title{Mortality Rate}
 \usage{
 mortality_rate(deaths, period = NULL, option = c("both", "monthly",
-  "quarterly"))
+  "quarterly", "annual"), periodName = NULL)
 }
 \arguments{
 \item{deaths}{a numerical vector that only contains 0 and 1, indicating whether the patient was alive or dead, respectively.}
 
-\item{period}{a numerical vector that contains the months when the patients were admitted to the hospital unit. If period variable is NULL (the default), the function will return a single mortality rate.}
+\item{period}{a numerical vector that contains the order of months when the patients were admitted to the hospital unit. If period variable is NULL (the default), the function will return a single mortality rate.}
 
-\item{option}{a character string which determines what the function mortality_rate returns. If the option is chosen to be 'both' (the default), the function will return a list containing monthly mortality rate, quarterly mortality rate and the number of patients in each month and quarter. If the option is 'monthly', only the monthly mortality rate and the number of patients in each month are returned. If the option is 'quarterly', only the quarterly mortality rate and the number of patients in each quarter are returned.}
+\item{option}{a character string which determines what the function mortality_rate returns. If the option is chosen to be 'both' (the default), the function will return a list containing monthly mortality rate, quarterly mortality rate, annual mortality rate and the number of patients in each month, quarter and year. If the option is 'monthly', only the monthly mortality rate and the number of patients in each month are returned. If the option is 'quarterly', only the quarterly mortality rate and the number of patients in each quarter are returned. If the option is 'annual', only the annual mortality rate and the number of patients in each year are returned.}
+
+\item{periodName}{a character vector that contains the name of months when the patients were admitted to de hospital unit. Used only if period is not NULL.}
 }
 \description{
 \code{mortality_rate} function returns a list with the mortality rate and the number of patients for each month or quarter of the year.
@@ -35,5 +37,6 @@ mortality_rate(deaths = deaths, period = months, option = 'both')
 
 }
 \author{
-Camila Cardoso
+Camila Cardoso <camila.cardoso@epimedsolutions.com>
+Lunna Borges <lunna.borges@epimedsolutions.com>
 }

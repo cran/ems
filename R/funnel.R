@@ -220,7 +220,7 @@
 #' @export
 
 
-funnel <- function(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1), lambda2 = sum(o2)/sum(n2), pi1 = sum(o1)/sum(n1), pi2 = sum(o2)/sum(n2), y.type = c("SMR","SRU"), p = c(.95,.998), theta, method = c("exact","normal"), direct = FALSE, myunits = rep(0,length(unit)), option = c("rate", "ratioRates", "prop", "diffProp", "ratioProp"), printUnits = TRUE, plot = TRUE, digits = 5, overdispersion = FALSE, ...){
+funnel <- function(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1), lambda2 = sum(o2)/sum(n2), pi1 = sum(o1)/sum(n1), pi2 = sum(o2)/sum(n2), y.type = c("SMR","SRU"), p = c(.95,.998), theta, method = c("normal","exact"), direct = FALSE, myunits = rep(0,length(unit)), option = c("rate", "ratioRates", "prop", "diffProp", "ratioProp"), printUnits = TRUE, plot = TRUE, digits = 5, overdispersion = FALSE, ...){
 
   if (option[1] != "rate" && option[1] != "ratioRates" && option[1] != "prop" && option[1] != "diffProp" && option[1] != "ratioProp"){stop("option must be either 'rate', 'ratioRates', 'prop', 'diffprop' or 'ratioProp'.")}
   if (!is.logical(plot)){stop("plot must be TRUE or FALSE.")}

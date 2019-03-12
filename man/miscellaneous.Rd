@@ -23,9 +23,9 @@ tab2tex(x, nc = ncol(x))
 
 trunc_num(x, min, max, toNA = FALSE)
 
-dummy.columns(data, original.column, factors, scan.oc = FALSE, sep = ",",
-  colnames.add = "Dummy.", min.events = NULL, rm.oc = FALSE,
-  warn = FALSE, return.factor = TRUE)
+dummy.columns(data, original.column, factors, scan.oc = FALSE,
+  sep = ",", colnames.add = "Dummy.", min.events = NULL,
+  rm.oc = FALSE, warn = FALSE, return.factor = TRUE)
 
 rm.dummy.columns(data, colnames, event = "1", min.events = 50,
   warn = FALSE)
@@ -113,6 +113,10 @@ Collection of functions for data editing, usually used as lower levels for other
 \code{trunc_num} truncates a numeric vector by replacing the values below the min value or above the max values by the min and max values respectively or optionall to NA. See example.
 
 \code{dummy.columns} takes a \code{data.frame} with one column with concatatenated levels of a factor (or character) variable and return a \code{data.frame} with additional columns with zeros and ones (dummy values), which names are the factor levels of the original column. See example below. \code{rm.dummy.columns} is an internal function of \code{dummy.columns} that deletes the new dummy columns which have less then a specified minimum events.
+
+\code{funnelEstimate}  estimates funnel confidence intervals (CI) for binomial, poisson or normal distribution. Used inside \code{\link[ems]{funnel}}.
+
+\code{winsorising} is an internal function that estimates a phi parameter after shirinking extreme z-scores. This parameter is used to inflate funnel CIs due overdispersion presence.
 }
 \examples{
 # Formating character or factor variable that should be numeric variables
@@ -158,6 +162,7 @@ y <- data.frame(v1 = 1:20,
                      size = sample(2:4, 1), replace = FALSE))))
 y
 
+
 # For a few of the codes in the original column
 y <- dummy.columns(y, original.column = "v2", factor = c("Code2","Code3"))
 y
@@ -166,7 +171,19 @@ y
 y <- dummy.columns(y[, 1:2], original.column = "v2", scan.oc = TRUE)
 y
 
-rm(y)
+# Funnel Estimate
+data(icu)
+icu
+
+funnelEstimate(y = icu$Saps3DeathProbabilityStandardEquation,
+               range = 1, u = length(unique(icu$Unit)),
+               totalAdmissions = nrow(icu),
+               totalObserved = sum(icu$UnitDischargeName),
+               theta = mean(icu$Saps3DeathProbabilityStandardEquation),
+               dist = 'normal', rho = 1, gdetheta = 1)
+
+rm(y, icu)
+
 }
 \seealso{
 \code{\link{dataquality}}

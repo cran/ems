@@ -1,7 +1,45 @@
 ==============
+ems v1.2.06 (Release date: 2019-03-12)
+
+    Changes:
+
+1- Improvements in SMR.table and tableStack.
+
+==============
+ems v1.2.05 (Release date: 2019-02-28)
+
+    Changes:
+
+1- The  default approximation method for funnel is now 'normal' besides 'exact'.
+2- Improvements in miscellaneous documentation.
+3- Improments in funnelEstimate function.
+
+
+==============
+ems v1.2.04 (Release date: 2019-01-29)
+
+    Changes:
+
+1- Fixed bugs in mortality_rate.
+
+==============
+ems v1.2.03 (Release date: 2019-01-25)
+
+    Changes:
+
+1- Function mortality_rate now calculate annual mortality rate too.
+
+==============
+ems v1.2.02 (Release date: 2019-01-09)
+
+1- Function mortality_rate doens't need to receive monthOrder between 1 and 12 anymore.
+2- mortality_rate now can receive an periodName argument and returns months and quarters names for them.
+
+
+==============
 ems v1.2.01 (Release date: 2018-11-16)
 
-2- Fix in funnelEstimate for normal distribution when there is overdispersion.
+1- Fix in funnelEstimate for normal distribution when there is overdispersion.
 
 ==============
 ems v1.2.00 (Release date: 2018-07-23)

@@ -10,21 +10,22 @@
 \alias{changePropFunnel}
 \title{Funnel plot for benchmarking health units}
 \usage{
-funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2, lambda1 = sum(o1)/sum(n1),
-  lambda2 = sum(o2)/sum(n2), pi1 = sum(o1)/sum(n1), pi2 = sum(o2)/sum(n2),
-  y.type = c("SMR", "SRU"), p = c(0.95, 0.998), theta, method = c("exact",
-  "normal"), direct = FALSE, myunits = rep(0, length(unit)),
-  option = c("rate", "ratioRates", "prop", "diffProp", "ratioProp"),
-  printUnits = TRUE, plot = TRUE, digits = 5, overdispersion = FALSE,
-  ...)
+funnel(unit, y, n, n1, n2, o, o1, o2, e, e1, e2,
+  lambda1 = sum(o1)/sum(n1), lambda2 = sum(o2)/sum(n2),
+  pi1 = sum(o1)/sum(n1), pi2 = sum(o2)/sum(n2), y.type = c("SMR",
+  "SRU"), p = c(0.95, 0.998), theta, method = c("normal", "exact"),
+  direct = FALSE, myunits = rep(0, length(unit)), option = c("rate",
+  "ratioRates", "prop", "diffProp", "ratioProp"), printUnits = TRUE,
+  plot = TRUE, digits = 5, overdispersion = FALSE, ...)
 
 \method{print}{funnel}(x, ...)
 
-\method{plot}{funnel}(x, ..., col = c("darkblue", "paleturquoise3", "gray26"),
-  lwd = 2, lty = c(2, 6, 1), bty = "n", pch = 21, pt.col = "white",
-  bg = "orange", pt.cex = 1.5, auto.legend = TRUE, text.cex = 0.7,
-  text.pos = NULL, mypts.col = "darkblue", printUnits = x$printUnits,
-  xlab = x$xlab, ylab = x$ylab, xlim = x$xlim, ylim = x$ylim)
+\method{plot}{funnel}(x, ..., col = c("darkblue", "paleturquoise3",
+  "gray26"), lwd = 2, lty = c(2, 6, 1), bty = "n", pch = 21,
+  pt.col = "white", bg = "orange", pt.cex = 1.5,
+  auto.legend = TRUE, text.cex = 0.7, text.pos = NULL,
+  mypts.col = "darkblue", printUnits = x$printUnits, xlab = x$xlab,
+  ylab = x$ylab, xlim = x$xlim, ylim = x$ylim)
 
 rateFunnel(unit, y, n, o, e, y.type, p, theta = 1, method = c("exact",
   "normal"), direct, ..., printUnits, auto.xlab = TRUE,
@@ -32,13 +33,13 @@ rateFunnel(unit, y, n, o, e, y.type, p, theta = 1, method = c("exact",
   xlim = c(0, max(rho)), ylim = c(min(lowerCI[[which(p == max(p))]]),
   max(upperCI[[which(p == max(p))]])), myunits, digits, overdispersion)
 
-changeRateFunnel(unit, n1, n2, o1, e1, o2, e2, lambda1, lambda2, y.type, p, ...,
-  printUnits, auto.xlab = TRUE, xlab = c("Average observed count",
-  "Expectation per period"), auto.ylab = TRUE, ylab = c(paste0(y.type[1],
-  "'s Ratio"), paste0("Log(", y.type[1], "'s Ratio)")),
-  ylim = c(max(lowerCI[[which(p == max(p))]]) - 1.5 * theta,
-  min(upperCI[[which(p == max(p))]]) + 1.5 * theta), xlim = c(0, max(rho)),
-  myunits, digits, overdispersion)
+changeRateFunnel(unit, n1, n2, o1, e1, o2, e2, lambda1, lambda2, y.type, p,
+  ..., printUnits, auto.xlab = TRUE, xlab = c("Average observed count",
+  "Expectation per period"), auto.ylab = TRUE,
+  ylab = c(paste0(y.type[1], "'s Ratio"), paste0("Log(", y.type[1],
+  "'s Ratio)")), ylim = c(max(lowerCI[[which(p == max(p))]]) - 1.5 *
+  theta, min(upperCI[[which(p == max(p))]]) + 1.5 * theta), xlim = c(0,
+  max(rho)), myunits, digits, overdispersion)
 
 propFunnel(unit, o, n, theta, p, method = c("exact", "normal"), ...,
   printUnits, ylab = "\%", xlab = "Volume", ylim = c(0,
@@ -48,8 +49,8 @@ propFunnel(unit, o, n, theta, p, method = c("exact", "normal"), ...,
 changePropFunnel(unit, o1, o2, n1, n2, p, pi1, pi2, method = c("diff",
   "ratio"), ..., printUnits, xlab = "Sample size per period",
   auto.ylab = TRUE, ylab = c("Proportions difference",
-  "Proportions ratio log"), ylim = c(max(lowerCI[[which(p == max(p))]]) - 6 *
-  theta, min(upperCI[[which(p == max(p))]]) + 6 * theta), xlim = c(0,
+  "Proportions ratio log"), ylim = c(max(lowerCI[[which(p == max(p))]]) -
+  6 * theta, min(upperCI[[which(p == max(p))]]) + 6 * theta), xlim = c(0,
   max(rho)), myunits, digits, overdispersion)
 }
 \arguments{

@@ -199,7 +199,7 @@
 #' @export
 
 tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", count = TRUE, na.rm = FALSE, means = TRUE, medians = FALSE, sds = TRUE, decimal = 2, total = TRUE, var.labels = TRUE, var.labels.trunc = 150, reverse = FALSE, vars.to.reverse = NULL, by = NULL, vars.to.factor = NULL, iqr = "auto", prevalence = FALSE, percent = c("column", "row", "none"), frequency = TRUE, test = TRUE, name.test = TRUE, total.column = FALSE, simulate.p.value = FALSE, sample.size = TRUE, assumption.p.value = 0.01, NAcol = FALSE, NArow = FALSE, drplvls = FALSE){
-  if(percent != "column" && percent != "row" && percent != "none" && !is.logical(percent)){
+  if(percent[1] != "column" & percent[1] != "row" & percent[1] != "none" & !is.logical(percent)){
     stop("'percent' must be 'column', 'row', 'none' or logical.")
   }
   if(!is.data.frame(dataFrame)){

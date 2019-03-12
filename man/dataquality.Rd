@@ -18,8 +18,9 @@ factor.table(data, limits, var.labels = attr(data,
   "var.labels")[match(unlist(sapply(seq_along(limits), function(i)
   limits[[i]][1])), names(data))], digits = 3)
 
-t_num(data, num.var, num.max = 100, num.min = 0, var.labels = attr(data,
-  "var.labels")[match(num.var, names(data))], digits = 3)
+t_num(data, num.var, num.max = 100, num.min = 0,
+  var.labels = attr(data, "var.labels")[match(num.var, names(data))],
+  digits = 3)
 
 num.table(data, num.limits, var.labels = attr(data,
   "var.labels")[match(num.limits$num.var, names(data))], digits = 3)

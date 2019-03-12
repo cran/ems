@@ -6,8 +6,9 @@
 \alias{plot.reclass}
 \title{Comparisson of the Standardized Resource Use (SRU)}
 \usage{
-reclass(x, y, same = TRUE, plot = FALSE, digits = 2, compare = c("SRU",
-  "SMR", "BOTH"), decreasing = FALSE, complete.rank = TRUE)
+reclass(x, y, same = TRUE, plot = FALSE, digits = 2,
+  compare = c("SRU", "SMR", "BOTH"), decreasing = FALSE,
+  complete.rank = TRUE)
 
 \method{print}{reclass}(x, ...)
 
@@ -22,15 +23,15 @@ reclass(x, y, same = TRUE, plot = FALSE, digits = 2, compare = c("SRU",
   tert.arg_y = list(col = "darkorange2", lty = 2, lwd = 1),
   text.arg_x = list(labels = seq(1, nrow(x$tab)), cex = 0.6),
   text.arg_y = list(labels = seq(1, nrow(x$tab)), cex = 0.6),
-  worse.arg_x = list(x = x$worse_x, pch = 21, col = "white", bg = "tomato",
-  cex = 2), worse.arg_y = list(x = x$worse_y, pch = 21, col = "white", bg =
-  "tomato", cex = 2), better.arg_x = list(x = x$better_x, pch = 21, col =
-  "white", bg = "mediumseagreen", cex = 2), better.arg_y = list(x =
-  x$better_y, pch = 21, col = "white", bg = "mediumseagreen", cex = 2),
-  auto.legend = TRUE, leg.arg = list(x = "topleft", bty = "n", xpd = NA,
-  inset = c(-1.8, -0.2), ncol = 1, horiz = F, pch = 19, cex = 0.8, pt.cex =
-  1.5), main.arg_x = list(main = "1st Stage"), main.arg_y = list(main =
-  "2nd Stage"))
+  worse.arg_x = list(x = x$worse_x, pch = 21, col = "white", bg =
+  "tomato", cex = 2), worse.arg_y = list(x = x$worse_y, pch = 21, col =
+  "white", bg = "tomato", cex = 2), better.arg_x = list(x = x$better_x,
+  pch = 21, col = "white", bg = "mediumseagreen", cex = 2),
+  better.arg_y = list(x = x$better_y, pch = 21, col = "white", bg =
+  "mediumseagreen", cex = 2), auto.legend = TRUE, leg.arg = list(x =
+  "topleft", bty = "n", xpd = NA, inset = c(-1.8, -0.2), ncol = 1, horiz =
+  F, pch = 19, cex = 0.8, pt.cex = 1.5), main.arg_x = list(main =
+  "1st Stage"), main.arg_y = list(main = "2nd Stage"))
 }
 \arguments{
 \item{x, y}{Objects of class 'SRU'. x is the SRU analsys from the 1st period (e.g. first trimester) and y from the 2nd period (e.g. second trimester). For \code{print.reclass} or \code{plot.reclass}, x is an object of class 'reclass'.}

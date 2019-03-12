@@ -16,6 +16,10 @@
 #'
 #' \code{dummy.columns} takes a \code{data.frame} with one column with concatatenated levels of a factor (or character) variable and return a \code{data.frame} with additional columns with zeros and ones (dummy values), which names are the factor levels of the original column. See example below. \code{rm.dummy.columns} is an internal function of \code{dummy.columns} that deletes the new dummy columns which have less then a specified minimum events.
 #'
+#' \code{funnelEstimate}  estimates funnel confidence intervals (CI) for binomial, poisson or normal distribution. Used inside \code{\link[ems]{funnel}}.
+#'
+#' \code{winsorising} is an internal function that estimates a phi parameter after shirinking extreme z-scores. This parameter is used to inflate funnel CIs due overdispersion presence.
+#'
 #' @param num.var A character, or factor variable to be formated as numeric.
 #'
 #' @param date A character or factor variable to be formated as date.
@@ -117,6 +121,7 @@
 #'                      size = sample(2:4, 1), replace = FALSE))))
 #'y
 #'
+#'
 #' # For a few of the codes in the original column
 #'y <- dummy.columns(y, original.column = "v2", factor = c("Code2","Code3"))
 #'y
@@ -125,7 +130,19 @@
 #'y <- dummy.columns(y[, 1:2], original.column = "v2", scan.oc = TRUE)
 #'y
 #'
-#'rm(y)
+#' # Funnel Estimate
+#' data(icu)
+#' icu
+#'
+#' funnelEstimate(y = icu$Saps3DeathProbabilityStandardEquation,
+#'                range = 1, u = length(unique(icu$Unit)),
+#'                totalAdmissions = nrow(icu),
+#'                totalObserved = sum(icu$UnitDischargeName),
+#'                theta = mean(icu$Saps3DeathProbabilityStandardEquation),
+#'                dist = 'normal', rho = 1, gdetheta = 1)
+#'
+#'rm(y, icu)
+#'
 #' @rdname miscellaneous
 #' @export
 f.num <- function(num.var){
@@ -201,7 +218,7 @@ remove.na <- function(data, replace = NA, console.output = TRUE){
     sf <- round( s / (length(na.sum) * nc[1]), 3)
     cat(paste0("Data has ", nc[2] , " columns."),"\n")
     cat(paste0("Data has ", length(na.sum) , " factor variables."),"\n")
-    cat(paste0("Data has ", s , " or " , sf, " of the factor fileds withouth data."),"\n")
+    cat(paste0("Data has ", s , " or " , sf, " of the factor fileds without data."),"\n")
   }
   data
 }
@@ -333,7 +350,7 @@ funnelEstimate <- function(y, range, u, totalAdmissions, totalObserved, p = .95,
 
 
   if(dist[1] == "binomial"){
-    warning("It is being used exact (binomial) distribuition to draw the funnel plot.")
+    message("It is being used exact (binomial) distribuition to draw the funnel plot.")
 
     if (!is.numeric(totalAdmissions)){stop("totalAdmissions must be numeric.")}
     if (!is.numeric(totalObserved)){stop("totalObserved must be numeric.")}
@@ -358,12 +375,12 @@ funnelEstimate <- function(y, range, u, totalAdmissions, totalObserved, p = .95,
   }
 
   if(dist[1] == 'normal'){
-    warning("It is being used normal approximation to draw the funnel plot.")
+    message("It is being used normal approximation to draw the funnel plot.")
 
     zp <- qnorm(1 - (1 - p) / 2)
 
     if ( overdispersion & phi > (1 + 2 * sqrt( 2 / u )) ){
-      warning("The funnel limits were inflated due overdispersion presence.")
+      message("The funnel limits were inflated due overdispersion presence.")
 
       upperCI <- theta + zp * sqrt(gdetheta * phi / range)
       lowerCI <- theta - zp * sqrt(gdetheta * phi / range)
@@ -376,7 +393,7 @@ funnelEstimate <- function(y, range, u, totalAdmissions, totalObserved, p = .95,
   }
 
   if(dist[1] == "poisson"){
-    warning("It is being used exact (poisson) distribuition to draw the funnel plot.")
+    message("It is being used exact (poisson) distribuition to draw the funnel plot.")
 
     lambda <- theta
 
@@ -384,7 +401,7 @@ funnelEstimate <- function(y, range, u, totalAdmissions, totalObserved, p = .95,
     alpha <- (ppois(rp, lambda) - p) / (ppois(rp, lambda) - ppois(rp - 1, lambda))
 
     if ( overdispersion & phi > (1 + 2 * sqrt( 2 / u )) ){
-      warning("The funnel limits were inflated due overdispersion presence.")
+      message("The funnel limits were inflated due overdispersion presence.")
 
       upperCI <- theta + (rp - alpha) * sqrt(phi) / range
       lowerCI <- theta - (rp - alpha) * sqrt(phi) / range

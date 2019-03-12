@@ -228,7 +228,7 @@ SMR.table <- function(data, group.var, obs.var, pred.var, digits = 5, use.label 
       stop("'var.labels ' must be a character vector.")
     }
   }
-  if (reorder !=  "no" && reorder !=  "SMR" && reorder !=  "lower.Cl" && reorder !=  "upper.Cl") {
+  if (reorder[1] !=  "no" & reorder[1] !=  "SMR" & reorder[1] !=  "lower.Cl" & reorder[1] !=  "upper.Cl") {
     stop("'reorder' must be one of 'no','SMR','lower.Cl' or 'upper.Cl'")
   }
   cont.table <- sapply(1:length(group.var), function(i) table(data[, group.var[i]]))
