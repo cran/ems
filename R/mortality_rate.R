@@ -37,8 +37,7 @@
 
 mortality_rate <- function(deaths, period = NULL,
                            option = c('both', 'monthly', 'quarterly', 'annual'),
-                           periodName = NULL
-){
+                           periodName = NULL){
 
   deaths <- as.numeric(deaths)
 
@@ -47,88 +46,87 @@ mortality_rate <- function(deaths, period = NULL,
   ###### Conditions
 
   if(!is.numeric(deaths)){
-    stop('deaths variable must be numeric.')
+    stop("'deaths' must be a numeric vector.")
   }
-
   if(any(deaths != 0 & deaths != 1)){
-    stop('deaths variable must be coded as 0 and 1.')
+    stop("'deaths' variable must be coded as 0 and 1.")
   }
-
-  if(!is.numeric(period) & !is.null(period)){
+  if(!is.numeric(period) & ! is.null(period)){
     stop('period variable must be numeric or NULL.')
   }
-
-  # if(any(period < 1) || any(period > 12)){
-  #   stop('period variable must be between 1 and 12.')
-  # }
-
+  
 
 
   ##### Function
 
   if(!is.null(period)){
 
-    period <- as.numeric(period)
+    period     <- as.numeric(period)
     periodName <- as.character(periodName)
 
     ### Monthly mortality rate
     monthly_rate <- tapply(X = deaths, INDEX = period, FUN = mean)
 
     ### Months names
-    qtd_months <- sort(unique(period))
-    months_names <- periodName[match(qtd_months,period)]
+    qtd_months   <- sort(unique(period))
+    # months_names <- periodName[match(qtd_months,period)]
 
 
     ### Creating a new "column" of quarters
     quarters <- rep(NA, length(period))
-    # quarters <- ifelse(period == 1 | period == 2 | period == 3, 1,
-    #                    ifelse(period == 4 | period == 5 | period == 6, 2,
-    #                           ifelse(period == 7 | period == 8 | period == 9,
-    #                                  3, 4)))
-
-
-    n_intervals <- round(length(unique(period)) / 3)
-
-    quarters <- cut(period, breaks = n_intervals, labels = seq(1,n_intervals))
-
+   
+    breaks   <- seq(1, max(period, na.rm = TRUE) - max(period, na.rm = TRUE) %% 3 + 2 * 3, 3)
+    labels   <- 1:(length(breaks) - 1)
+    quarters <- as.numeric(cut(period, breaks = breaks, include.lowest = TRUE, right = FALSE, labels = labels))
+    
+    # n_intervals <- round(length(unique(period)) / 3)
+    # quarters <- cut(period, breaks = n_intervals, labels = seq(1,n_intervals))
+    
+    
     ### Quarterly mortality rate
     quarterly_rate <- tapply(X = deaths, INDEX = quarters, FUN = mean)
 
     ### Quarter names
-    qtd_quarters <- length(unique(quarters))
-    quarter_names <- rep(NA, qtd_quarters)
-    j = 1
-    for (i in 1:qtd_quarters){
-      quarter_names[i] <- paste0(months_names[j],'-',months_names[j+2])
-      if(is.na(months_names[j+2])){
-        quarter_names[i] <- paste0(months_names[j])
-      }
-      j <- j+3
-    }
+    # qtd_quarters <- length(unique(quarters))
+    # quarter_names <- rep(NA, qtd_quarters)
+    # j = 1
+    # for (i in 1:qtd_quarters){
+    #   quarter_names[i] <- paste0(months_names[j], '-', months_names[j+2])
+    #   if(is.na(months_names[j+2])){
+    #     quarter_names[i] <- paste0(months_names[j])
+    #   }
+    #   j <- j+3
+    # }
 
 
     ### Creating a new column of years only if there is more than 12 periods
 
     if(length(unique(period)) > 12){
+      
       years <- rep(NA, length(period))
+      
+      breaks <- seq(1, max(period, na.rm = TRUE) - max(period, na.rm = TRUE) %% 12 + 2 * 12, 12)
+      labels <- 1:(length(breaks) - 1)
+      years  <- as.numeric(cut(period, breaks = breaks, include.lowest = TRUE, right = FALSE, labels = labels))
 
-      n_intervals <- round(length(unique(period)) / 12)
-      years <- cut(period, breaks = n_intervals, labels = seq(1,n_intervals))
+      # n_intervals <- round(length(unique(period)) / 12)
+      # years <- cut(period, breaks = n_intervals, labels = seq(1,n_intervals))
+      
       ### Annual mortality rate
       annual_rate <- tapply(X = deaths, INDEX = years, FUN = mean)
 
       ### Year names
-      qtd_years <- length(unique(years))
-      years_names <- rep(NA, qtd_years)
-
-      j <- 1
-      for (i in 1:qtd_years){
-        years_names[i] <- paste0(months_names[j],'-',months_names[j+11])
-        if(is.na(months_names[j+11])){
-          years_names[i] <- paste0(months_names[j])
-        }
-        j <- j+12
-      }
+      # qtd_years <- length(unique(years))
+      # years_names <- rep(NA, qtd_years)
+      # 
+      # j <- 1
+      # for (i in 1:qtd_years){
+      #   years_names[i] <- paste0(months_names[j],'-',months_names[j+11])
+      #   if(is.na(months_names[j+11])){
+      #     years_names[i] <- paste0(months_names[j])
+      #   }
+      #   j <- j+12
+      # }
 
       ### Number of patients
       n_years <- as.vector(table(years))
@@ -143,27 +141,33 @@ mortality_rate <- function(deaths, period = NULL,
     ### Number of patients
     n_months <- as.vector(table(period))
     n_quarts <- as.vector(table(quarters))
-    # n_years <- as.vector(table(years))
-
+    
+    
     if(option[1] == 'both'){
       if(length(unique(period)) > 12){
-        output <- list(monthly_rate = monthly_rate, quarterly_rate = quarterly_rate, annual_rate = annual_rate, n_months = n_months, n_quarts = n_quarts, n_years = n_years, months_names = months_names, quarter_names = quarter_names, years_names = years_names)
+        
+        output <- list(monthly_rate = monthly_rate, quarterly_rate = quarterly_rate, annual_rate = annual_rate,
+                       n_months = n_months, n_quarts = n_quarts, n_years = n_years)
+        
       } else {
-        output <- list(monthly_rate = monthly_rate, quarterly_rate = quarterly_rate, n_months = n_months, n_quarts = n_quarts, months_names = months_names, quarter_names = quarter_names)
+        
+        output <- list(monthly_rate = monthly_rate, quarterly_rate = quarterly_rate, 
+                       n_months = n_months, n_quarts = n_quarts)
+        
       }
 
     }
 
     if(option[1] == 'monthly'){
-      output <- list(monthly_rate = monthly_rate, n_months = n_months, months_names = months_names)
+      output <- list(monthly_rate = monthly_rate, n_months = n_months)
     }
 
     if(option[1] == 'quarterly'){
-      output <- list(quarterly_rate = quarterly_rate, n_quarts = n_quarts, quarter_names = quarter_names)
+      output <- list(quarterly_rate = quarterly_rate, n_quarts = n_quarts)
     }
 
     if(option[1] == 'annual'){
-      output <- list(annual_rate = annual_rate, n_years = n_years, years_names = years_names)
+      output <- list(annual_rate = annual_rate, n_years = n_years)
     }
 
   }
