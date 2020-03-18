@@ -1,4 +1,28 @@
 ==============
+ems v1.3.2 (Release date: 2020-03-18)
+
+    Changes:
+
+1- Fixing SMR.table function to use stringAsFactors = TRUE when necessary.
+
+
+==============
+ems v1.3.1 (Release date: 2020-02-03)
+
+    Changes:
+
+1- Improvements in mortality_rate: now the period in the function can refer to quarters or years.
+
+==============
+ems v1.3.0 (Release date: 2019-04-30)
+
+    Changes:
+
+1- New functions: R2sh, R2pm and cal.slope.
+2- Now ems depends of packages boot, survival and rms.
+
+
+==============
 ems v1.2.07 (Release date: 2019-03-25)
 
     Changes:

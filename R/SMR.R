@@ -256,7 +256,7 @@ SMR.table <- function(data, group.var, obs.var, pred.var, digits = 5, use.label 
   } else {
     Levels <- c(NA, unname(unlist(sapply(data[ , group.var], levels))))
   }
-  x <- data.frame(Variables, Levels)
+  x <- data.frame(Variables, Levels, stringsAsFactors = TRUE)
   x$N <- NA
   x$Observed <- NA
   x$Expected <- NA
@@ -478,4 +478,5 @@ forest.SMR <- function(x,
   SMR.head.arg$y <- ylim[2] + 1
   do.call(text, SMR.head.arg)
 }
+
 

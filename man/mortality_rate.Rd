@@ -4,17 +4,24 @@
 \alias{mortality_rate}
 \title{Mortality Rate}
 \usage{
-mortality_rate(deaths, period = NULL, option = c("both", "monthly",
-  "quarterly", "annual"), periodName = NULL)
+mortality_rate(deaths, period = NULL, isQuarter = FALSE,
+  isYear = FALSE, option = c("both", "monthly", "quarterly", "annual"),
+  periodName = NULL, default_tapply = NA)
 }
 \arguments{
 \item{deaths}{a numerical vector that only contains 0 and 1, indicating whether the patient was alive or dead, respectively.}
 
 \item{period}{a numerical vector that contains the order of months when the patients were admitted to the hospital unit. If period variable is NULL (the default), the function will return a single mortality rate.}
 
+\item{isQuarter}{logical indicating whether the \code{period} refers to quarter or not. The default is \code{FALSE}.}
+
+\item{isYear}{logical indicating whether the \code{period} refers to years or not. The default is \code{FALSE}.}
+
 \item{option}{a character string which determines what the function mortality_rate returns. If the option is chosen to be 'both' (the default), the function will return a list containing monthly mortality rate, quarterly mortality rate, annual mortality rate and the number of patients in each month, quarter and year. If the option is 'monthly', only the monthly mortality rate and the number of patients in each month are returned. If the option is 'quarterly', only the quarterly mortality rate and the number of patients in each quarter are returned. If the option is 'annual', only the annual mortality rate and the number of patients in each year are returned.}
 
 \item{periodName}{a character vector that contains the name of months when the patients were admitted to de hospital unit. Used only if period is not NULL.}
+
+\item{default_tapply}{argument to set the \code{default} in \code{tapply} function when evaluating the mortality rate for each period. Can be equal to \code{0} or \code{NA} (the default).}
 }
 \description{
 \code{mortality_rate} function returns a list with the mortality rate and the number of patients for each month or quarter of the year.

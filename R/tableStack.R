@@ -70,10 +70,17 @@
 #' \code{sd.of.average.scores}  \tab standard deviation of mean scores
 #' }
 #' When 'by' is specified, an object of class 'tableStack' and 'table is returned.
-#' @author Virasakdi Chongsuvivatwong <cvirasak@medicine.psu.ac.th>
+#'
+#' @author
+#'
+#' Virasakdi Chongsuvivatwong <cvirasak@medicine.psu.ac.th>
+#'
 #' Caio Ferreira <caio.ferreira@epimedsolutions.com>
+#'
 #' Lunna Borges <caio.ferreira@epimedsolutions.com>
-#'Pedro Brasil <pedro.brasil@epimedsolutions.com>
+#'
+#' Pedro Brasil <pedro.brasil@epimedsolutions.com>
+#'
 #' @references 'table', 'tab1', 'summ', 'alpha', 'unclassDataframe'
 #' @examples
 #' set.seed(1)

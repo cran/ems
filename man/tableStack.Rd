@@ -245,7 +245,10 @@ rm(total.score, mean.score, a, data, bloodbank)
 }
 \author{
 Virasakdi Chongsuvivatwong <cvirasak@medicine.psu.ac.th>
+
 Caio Ferreira <caio.ferreira@epimedsolutions.com>
+
 Lunna Borges <caio.ferreira@epimedsolutions.com>
+
 Pedro Brasil <pedro.brasil@epimedsolutions.com>
 }
