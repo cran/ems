@@ -18,6 +18,6 @@
 #' }
 #'
 #' @format A data frame with 686 rows and 14 variables
-#' @source http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
+#' @source https://biostat.app.vumc.org/wiki/Main/DataSets
 "breastCancer"
 #>[1]"breastCancer"

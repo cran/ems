@@ -6,7 +6,7 @@
 \title{German Breast Cancer Dataset}
 \format{A data frame with 686 rows and 14 variables}
 \source{
-http://biostat.mc.vanderbilt.edu/wiki/Main/DataSets
+https://biostat.app.vumc.org/wiki/Main/DataSets
 }
 \usage{
 breastCancer

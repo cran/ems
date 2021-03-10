@@ -8,17 +8,19 @@
 \usage{
 calcurve(deaths, pred, score = NULL, name_score = "Saps3",
   other_score = NULL, name_other_score = NULL,
-  categories_option = c("predicted", "score"), table = FALSE,
-  plot = TRUE, title_label = "Calibration Curve",
+  categories_option = c("predicted", "score", "patients"),
+  table = FALSE, plot = TRUE, title_label = "Calibration Curve",
   y1axis_label = "Patients (n)", y2axis_label = "Mortality Rate (\%)",
   score_color = c("#cac7cc", "#ffc341", "#33cca3"),
-  bar_color = "#1f77b4", points = c(19, 18, 17))
+  bar_color = "#1f77b4", points = c(19, 18, 17),
+  cultureCode = "en-US", legend_inset = -0.7)
 
 \method{print}{calcurve}(x, ...)
 
-\method{plot}{calcurve}(x, ..., main = x$title_label,
-  text = x$y2axis_label, ylab = x$y1axis_label, col = c(x$bar_color,
-  x$score_color), pch = x$points)
+\method{plot}{calcurve}(x, ..., xlab = NULL, ylab2 = NULL,
+  main = x$title_label, text = x$y2axis_label, ylab = x$y1axis_label,
+  col = c(x$bar_color, x$score_color), pch = x$points,
+  cultureCode = x$cultureCode, legend_inset = x$legend_inset)
 }
 \arguments{
 \item{deaths}{a numerical vector that only contains 0 and 1, indicating whether the patient was alive or dead, respectively.}
@@ -33,7 +35,7 @@ calcurve(deaths, pred, score = NULL, name_score = "Saps3",
 
 \item{name_other_score}{if other_score variable is different from NULL, this argument must be a vector with the name(s) of the score(s) given.}
 
-\item{categories_option}{a character string which determines if the categories will refer to the main score or to the predicted mortality rate. Accepted values are 'predicted' (the default) or 'score'.}
+\item{categories_option}{a character string which determines if the categories will refer to the main score or to the predicted mortality rate. Accepted values are 'predicted' (the default), 'score' or 'patients'.}
 
 \item{table}{logical; if \code{TRUE} prints the \code{data.frame}.}
 
@@ -49,9 +51,17 @@ calcurve(deaths, pred, score = NULL, name_score = "Saps3",
 
 \item{points}{a vector with markers types of the scores for \code{calcurve}.}
 
+\item{cultureCode}{a character specifying which language should be used for plot x axis title and legends. Possible values are 'pt-BR' and 'en-US'. The default is 'en-US'.}
+
+\item{legend_inset}{inset distance(s) from the margins as a fraction of the plot region when legend is placed by keyword. See \code{\link[graphics]{legend}}.}
+
 \item{x}{an object of class 'calcurve'.}
 
 \item{...}{further arguments passed to \code{\link[graphics]{plot}}.}
+
+\item{xlab}{label of the horizontal axis for \code{plot.calcurve}, defaults to \code{NULL}.}
+
+\item{ylab2}{label of the secondary vertical axis for \code{plot.calcurve}, defaults to \code{NULL}.}
 
 \item{main}{main title for \code{plot.calcurve}.}
 
@@ -68,7 +78,7 @@ calcurve(deaths, pred, score = NULL, name_score = "Saps3",
 }
 \details{
 \itemize{
-\item If \code{categories_option = 'score'}, the categories will refer to the deciles of the main score punctuation. If \code{categories_option = 'predicted'}, the categories will refer to fixed intervals of the predicted mortality rate.
+\item If \code{categories_option = 'score'}, the categories will refer to the deciles of the main score punctuation. If \code{categories_option = 'predicted'}, the categories will refer to fixed intervals of the predicted mortality rate. If \code{categories_option = 'patients'} the categories will refer to the deciles of patients.
 }
 }
 \examples{
@@ -81,7 +91,7 @@ data(icu)
 a <- calcurve(deaths = icu$UnitDischargeName,
 pred = icu$Saps3DeathProbabilityStandardEquation,
 score = icu$Saps3Points, name_score = 'Saps3',
-categories_option = 'score', table = FALSE, plot = TRUE)
+categories_option = 'predicted', table = FALSE, plot = TRUE)
 
 
 }

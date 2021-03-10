@@ -16,7 +16,7 @@
 #'
 #' @param name_other_score if other_score variable is different from NULL, this argument must be a vector with the name(s) of the score(s) given.
 #'
-#' @param categories_option a character string which determines if the categories will refer to the main score or to the predicted mortality rate. Accepted values are 'predicted' (the default) or 'score'.
+#' @param categories_option a character string which determines if the categories will refer to the main score or to the predicted mortality rate. Accepted values are 'predicted' (the default), 'score' or 'patients'.
 #'
 #' @param table logical; if \code{TRUE} prints the \code{data.frame}.
 #'
@@ -46,9 +46,17 @@
 #'
 #' @param ... further arguments passed to \code{\link[graphics]{plot}}.
 #'
+#' @param cultureCode a character specifying which language should be used for plot x axis title and legends. Possible values are 'pt-BR' and 'en-US'. The default is 'en-US'.
+#'
+#' @param legend_inset inset distance(s) from the margins as a fraction of the plot region when legend is placed by keyword. See \code{\link[graphics]{legend}}.
+#'
+#' @param xlab label of the horizontal axis for \code{plot.calcurve}, defaults to \code{NULL}.
+#'
+#' @param ylab2 label of the secondary vertical axis for \code{plot.calcurve}, defaults to \code{NULL}.
+#'
 #' @details
 #' \itemize{
-#' \item If \code{categories_option = 'score'}, the categories will refer to the deciles of the main score punctuation. If \code{categories_option = 'predicted'}, the categories will refer to fixed intervals of the predicted mortality rate.
+#' \item If \code{categories_option = 'score'}, the categories will refer to the deciles of the main score punctuation. If \code{categories_option = 'predicted'}, the categories will refer to fixed intervals of the predicted mortality rate. If \code{categories_option = 'patients'} the categories will refer to the deciles of patients.
 #' }
 #'
 #'
@@ -65,7 +73,7 @@
 #' a <- calcurve(deaths = icu$UnitDischargeName,
 #' pred = icu$Saps3DeathProbabilityStandardEquation,
 #' score = icu$Saps3Points, name_score = 'Saps3',
-#' categories_option = 'score', table = FALSE, plot = TRUE)
+#' categories_option = 'predicted', table = FALSE, plot = TRUE)
 #'
 #'
 #' @export
@@ -73,7 +81,7 @@
 calcurve <- function(deaths, pred,
                      score = NULL, name_score = 'Saps3',
                      other_score = NULL, name_other_score = NULL,
-                     categories_option = c('predicted', 'score'),
+                     categories_option = c("predicted","score", "patients"),
                      table = FALSE, plot = TRUE,
                      title_label = 'Calibration Curve',
                      y1axis_label = 'Patients (n)',
@@ -81,8 +89,10 @@ calcurve <- function(deaths, pred,
                      score_color = c('#cac7cc', '#ffc341',
                                      '#33cca3'),
                      bar_color = '#1f77b4',
-                     points = c(19, 18, 17)
-                     ){
+                     points = c(19, 18, 17),
+                     cultureCode = 'en-US',
+                     legend_inset = -0.7
+){
 
 
 
@@ -152,8 +162,8 @@ calcurve <- function(deaths, pred,
     }
   }
 
-  if(categories_option[1] != 'score' & categories_option[1] != 'predicted'){
-    stop('categories_option variable must be "score" or "predicted".')
+  if (!(categories_option[1] %in% c("score", "predicted", "patients"))) {
+    stop("categories_option variable must be either \"score\", \"predicted\", or \"patients\".")
   }
 
   if(categories_option[1] == 'score'){
@@ -169,13 +179,29 @@ calcurve <- function(deaths, pred,
   if(categories_option[1] == 'score'){
 
     deciles    <- quantile(sort(score), seq(0,1,0.1))
-    categories <- cut(x = score, breaks = deciles)
+    categories <- cut(x = score, breaks = deciles, include.lowest = T)
 
-  }
-  else{
+  } else if(categories_option[1] == "predicted"){
 
-    categories <- cut(x = pred, breaks = seq(0, 100, 10))
+    categories <- cut(x = pred, breaks = seq(0, 100, 10), include.lowest = T)
 
+  } else {
+    deaths <- deaths[order(pred)]
+    pred <- sort(pred)
+    deciles <- quantile(1:length(deaths),
+                        0:10/10)
+
+    quantiles_pred <- round(quantile(pred, 0:10/10), 3)
+    categories_labels = paste0("(", quantiles_pred[1:10], ", ",
+                               quantiles_pred[2:11], "]")
+
+    substr(categories_labels[1], 1, 1) <- "["
+
+    categories <- cut(x = order(pred, decreasing = F),
+                      breaks = deciles,
+                      include.lowest = T)
+
+    categories <- factor(categories, labels = categories_labels)
   }
 
   # Observed Mortality by Category
@@ -184,9 +210,19 @@ calcurve <- function(deaths, pred,
   # Predicted Mortality by Category
   pred_rate_by_cat <- tapply(X = pred, INDEX = categories, FUN = mean)
 
-  df <- data.frame(row.names = 1:10, 'categories' = names(table(categories)),
-                   'n' = as.vector(table(categories)), obs_rate_by_cat,
-                   pred_rate_by_cat)
+  if(categories_option == "patients"){
+    categories_labels <- unique(categories_labels)
+    df <- data.frame(row.names = 1:length(categories_labels),
+                     'categories' = categories_labels,
+                     'n' = as.vector(table(categories)),
+                     obs_rate_by_cat,
+                     pred_rate_by_cat)
+  }else{
+    df <- data.frame(row.names = 1:10, 'categories' = names(table(categories)),
+                     'n' = as.vector(table(categories)), obs_rate_by_cat,
+                     pred_rate_by_cat)
+
+  }
 
 
   if(!is.null(other_score)){
@@ -211,7 +247,9 @@ calcurve <- function(deaths, pred,
                  y2axis_label = y2axis_label,
                  score_color = score_color,
                  bar_color = bar_color,
-                 points = points)
+                 points = points,
+                 cultureCode = cultureCode,
+                 legend_inset = legend_inset)
 
   class(output) <- 'calcurve'
 
@@ -234,6 +272,7 @@ calcurve <- function(deaths, pred,
 
 
 
+
 #' @rdname calcurve
 #' @export
 
@@ -246,12 +285,16 @@ print.calcurve <- function(x, ...){
 #' @rdname calcurve
 #' @export
 
-plot.calcurve <- function(x, ..., main = x$title_label,
+plot.calcurve <- function(x, ..., xlab = NULL,
+                          ylab2 = NULL,
+                          main = x$title_label,
                           text = x$y2axis_label,
                           ylab = x$y1axis_label,
                           col = c(x$bar_color, x$score_color),
-                          pch = x$points
-                          ){
+                          pch = x$points,
+                          cultureCode = x$cultureCode,
+                          legend_inset = x$legend_inset
+){
 
   y    <- x$df
   cat  <- y$categories
@@ -284,21 +327,55 @@ plot.calcurve <- function(x, ..., main = x$title_label,
     }
   }
 
-
-  if(categories_option[1] == 'score'){
-
-    xaxis_label <- paste('Deciles of the Score', name_score)
-
-  }
-  else{
-
-    xaxis_label <- paste('Fixed Categories of the Mortality Rate Predicted by', name_score)
-
+  if(!is.null(ylab2)){
+    text <- ylab2
   }
 
+  if(!is.null(xlab)){
+    xaxis_label <- xlab
+  }else{
+    if(categories_option[1] == 'score'){
 
+      xaxis_label <- paste('Deciles of the Score', name_score)
+
+    } else if(categories_option[1] == 'predicted'){
+
+      xaxis_label <- paste('Fixed Categories of the Mortality Rate Predicted by', name_score)
+
+    } else {
+      xaxis_label <- paste('Mortality Rate Predicted by', name_score)
+    }
+  }
+
+  if(cultureCode == 'pt-BR'){
+
+    observed_label <- 'Mortalidade observada'
+
+    score_legend <- paste('Mortalidade esperada pelo', name_score)
+    if(!is.null(name_other_score)){
+      for(i in 1:length(name_other_score)){
+        score_legend[i + 1] <- paste('Mortalidade esperada pelo',
+                                     name_other_score[i])
+      }
+    }
+
+    if(categories_option[1] == 'score'){
+
+      xaxis_label <- paste('Decis do Score', name_score)
+
+    } else if(categories_option[1] == 'predicted'){
+
+      xaxis_label <- paste('Mortalidade prevista pelo', name_score)
+
+    } else {
+      xaxis_label <- paste('Mortalidade prevista pelo', name_score)
+    }
+
+  }
 
   ### Plot
+
+  options(scipen=999)
 
   par(mar=c(7,4,4,5)+.1)
   bp <- barplot(height = freq, names.arg = cat, ...,
@@ -307,7 +384,7 @@ plot.calcurve <- function(x, ..., main = x$title_label,
                 col = col[1], border = NA)
 
   par(new=TRUE)
-  bp_new <- barplot(height = rep(0, 10), names.arg = '', ...,
+  bp_new <- barplot(height = rep(0, nrow(y)), names.arg = '', ...,
                     xlab = '', ylab = '', main = '', axes = F,
                     ylim = c(0, maximum * 1.2),
                     col = 1, border = NA, plot = T)
@@ -339,7 +416,7 @@ plot.calcurve <- function(x, ..., main = x$title_label,
   }
 
   par(new = TRUE)
-  bp <- barplot(height = rep(0, 10), names.arg = '', axes = F,
+  bp <- barplot(height = rep(0, nrow(y)), names.arg = '', axes = F,
                 xlab = '', ylab = '', main = '',
                 ylim = c(0, max(freq) * 1.3),
                 col = col[1], border = NA)
@@ -354,10 +431,11 @@ plot.calcurve <- function(x, ..., main = x$title_label,
   markers_types <- c(NA, pch[1:length(score_legend)])
   width_markers <- c(0, rep(1.2, length(score_legend)))
 
-  legend(x = 'bottom', inset = -0.7, legend = legend, col = colors,
+  legend(x = 'bottom', inset = legend_inset, legend = legend, col = colors,
          lty = types, pch = markers_types, cex = 0.7, lwd = 1, bty = 'n',
          pt.cex = width_markers, ncol = 2, xjust = 0.5)
 
 }
+
 
 

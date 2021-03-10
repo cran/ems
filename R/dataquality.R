@@ -41,7 +41,7 @@
 #' @param try.keep Default is \code{TRUE}. If \code{TRUE}, \code{remove.unwanted} will first trim all empty spaces and transform all levels to lower case characters before comparing the found levels and expected levels of a character/factor variable. Therefore, found levels such as "yes  " will be considered identical to the expected level "Yes", and will not be coerced to \code{NA}.
 #'
 #' @param stringAsFactors In \code{rm.unwanted}, if set to \code{TRUE}, the default value, variables in the limits argument that are character and numeric variables in data will be returned as factors. Logical variables are skipped. However, a variable will be returned as logical if it is originally a factor but its final levels are \code{TRUE} and \code{FALSE} and \code{stringAsFactors = FALSE}.
-#' 
+#'
 #' @author Lunna Borges & Pedro Brasil
 #'
 #' @seealso \code{\link{miscellaneous}}
@@ -160,9 +160,9 @@ t_factor <- function(data, variable, legal, var.labels = attr(data, "var.labels"
   if (any(names(table.tmp) == "TRUE")) {
     val.n.esp <- table.tmp[which(names(table.tmp) == "TRUE")]
   } else {val.n.esp <- 0}
-  output <- c(var.labels , paste0(val.esp, " (", sprintf(paste0("%.",digits,"f"), val.esp / var.dim,digits), ")"),
-              paste0(val.n.esp, " (", sprintf(paste0("%.",digits,"f"), val.n.esp/var.dim,digits), ")"),
-              paste0(na.sum, " (", sprintf(paste0("%.",digits,"f"), na.sum/var.dim,digits), ")"))
+  output <- c(var.labels , paste0(val.esp, " (", sprintf(paste0("%.",digits,"f"), val.esp / var.dim), ")"),
+              paste0(val.n.esp, " (", sprintf(paste0("%.",digits,"f"), val.n.esp/var.dim), ")"),
+              paste0(na.sum, " (", sprintf(paste0("%.",digits,"f"), na.sum/var.dim), ")"))
   names(output) <- c("Variable","Expected values","Unexpected values","Missing values")
   output
 }

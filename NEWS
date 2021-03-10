@@ -1,4 +1,63 @@
 ==============
+ems v1.3.10 (Release date: 2021-02-25)
+
+    Changes:
+
+1- Fixed links at Readme file.
+
+==============
+ems v1.3.9 (Release date: 2021-02-04)
+
+    Changes:
+
+1- Improvements in package documentation.
+
+==============
+ems v1.3.8 (Release date: 2021-02-01)
+
+    Changes:
+
+1- Fixed bugs in calcurve function when categories_option = 'patients'.
+
+
+==============
+ems v1.3.7 (Release date: 2020-10-30)
+
+    Changes:
+
+1- Improvements in t_factor function to avoid warning about sprintf in R devel.
+
+==============
+ems v1.3.6 (Release date: 2020-10-20)
+
+    Changes:
+
+1- Now one can change calcurve axis' title by using plot.calcurve.
+
+
+==============
+ems v1.3.5 (Release date: 2020-08-17)
+
+    Changes:
+
+1- Improvements in calcurve function. When categories_option = 'patients' xaxis' labels shows the predicted mortalities and not the decile number anymore.
+
+==============
+ems v1.3.4 (Release date: 2020-08-05)
+
+    Changes:
+
+1- Improvements in calcurve function. Now it allows to generate calibration curve by patients deciles.
+2- Improvement in calcurve documentation: example changed.
+
+==============
+ems v1.3.3 (Release date: 2020-07-20)
+
+    Changes:
+
+1- Improvement in calcurve function. New arguments cultureCode and legend_inset included.
+
+==============
 ems v1.3.2 (Release date: 2020-03-18)
 
     Changes:
