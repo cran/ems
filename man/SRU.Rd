@@ -8,24 +8,53 @@
 \alias{SRUcalc}
 \title{Standardized Resource Use (SRU)}
 \usage{
-SRU(prob, death, unit, los, los.exp, class, score, plot = FALSE,
-  type = 1, digits = 2, digits2 = 5, originals = FALSE,
-  myunits = NULL)
+SRU(
+  prob,
+  death,
+  unit,
+  los,
+  los.exp,
+  class,
+  score,
+  plot = FALSE,
+  type = 1,
+  digits = 2,
+  digits2 = 5,
+  originals = FALSE,
+  myunits = NULL
+)
 
 \method{print}{SRU}(x, ...)
 
-\method{plot}{SRU}(x, ..., xlim = range(x$rates[, 2]),
-  ylim = range(x$rates[, 1]), xlab = "SMR", ylab = "SRU",
-  points.arg = list(pch = 21, col = "white", bg = "cadetblue3", cex =
-  1.5), med.arg = list(col = "dodgerblue4", lwd = 2, lty = 1),
+\method{plot}{SRU}(
+  x,
+  ...,
+  xlim = range(x$rates[, 2]),
+  ylim = range(x$rates[, 1]),
+  xlab = "SMR",
+  ylab = "SRU",
+  points.arg = list(pch = 21, col = "white", bg = "cadetblue3", cex = 1.5),
+  med.arg = list(col = "dodgerblue4", lwd = 2, lty = 1),
   tert.arg = list(col = "darkorange2", lty = 2, lwd = 1),
-  auto.legend = TRUE, leg.arg = list(x = "top", bty = "n", xpd = NA,
-  inset = -0.2, ncol = 2), bty = "n", myunits = x$myunits,
+  auto.legend = TRUE,
+  leg.arg = list(x = "top", bty = "n", xpd = NA, inset = -0.2, ncol = 2),
+  bty = "n",
+  myunits = x$myunits,
   myunitspts.arg = list(pch = 21, col = "white", bg = "red", cex = 1.5),
-  myunitstext.arg = list(pos = 1, font = 2, cex = 0.8))
+  myunitstext.arg = list(pos = 1, font = 2, cex = 0.8)
+)
 
-cut_in(score, los, death, unit, days, min = 200, exc.ICU = TRUE,
-  complete = FALSE, digits = 5)
+cut_in(
+  score,
+  los,
+  death,
+  unit,
+  days,
+  min = 200,
+  exc.ICU = TRUE,
+  complete = FALSE,
+  digits = 5
+)
 
 SRUcalc(prob, death, unit, los, score, digits = 2)
 }

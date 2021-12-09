@@ -6,35 +6,57 @@
 \alias{forest.SMR}
 \title{Standardized Mortality Ratio (SMR)}
 \usage{
-SMR(obs.var, pred.var, digits = 5, ci.method = c("Hosmer", "Byar"),
-  ci.level = 0.95)
+SMR(
+  obs.var,
+  pred.var,
+  digits = 5,
+  ci.method = c("Hosmer", "Byar"),
+  ci.level = 0.95
+)
 
-SMR.table(data, group.var, obs.var, pred.var, digits = 5,
-  use.label = FALSE, var.labels = attr(data,
-  "var.labels")[match(group.var, names(data))], ci.method = c("Hosmer",
-  "Byar"), ci.level = 0.95, reorder = c("no", "SMR", "lower.Cl",
-  "upper.Cl"), decreasing = FALSE)
+SMR.table(
+  data,
+  group.var,
+  obs.var,
+  pred.var,
+  digits = 5,
+  use.label = FALSE,
+  var.labels = attr(data, "var.labels")[match(group.var, names(data))],
+  ci.method = c("Hosmer", "Byar"),
+  ci.level = 0.95,
+  reorder = c("no", "SMR", "lower.Cl", "upper.Cl"),
+  decreasing = FALSE
+)
 
-forest.SMR(x, mar1 = c(5.1, 1, 4.1, 1), mar.SMR = c(5.1, 7, 4.1, 1),
-  overall.arg = list(x = 0.01, font = 2, las = 1, labels = var.labels[1],
-  xpd = NA, adj = 0), NOE.overall.args = list(x = c(N.values.arg$x,
-  O.values.arg$x, E.values.arg$x), font = 2, las = 1, xpd = NA),
-  var.labels.arg = list(x = 0.01, font = 2, las = 1, cex = 1, xpd = NA,
-  adj = 0), cat.labels.arg = list(x = 0.1, font = 3, las = 1, cex = 0.95,
-  col = gray(0.4), xpd = NA, adj = 0), N.values.arg = list(x = 0.5, col =
-  gray(0.4), xpd = NA), O.values.arg = list(x = 0.675, col = gray(0.4),
-  xpd = NA), E.values.arg = list(x = 0.85, col = gray(0.4), xpd = NA),
+forest.SMR(
+  x,
+  mar1 = c(5.1, 1, 4.1, 1),
+  mar.SMR = c(5.1, 7, 4.1, 1),
+  overall.arg = list(x = 0.01, font = 2, las = 1, labels = var.labels[1], xpd = NA, adj
+    = 0),
+  NOE.overall.args = list(x = c(N.values.arg$x, O.values.arg$x, E.values.arg$x), font =
+    2, las = 1, xpd = NA),
+  var.labels.arg = list(x = 0.01, font = 2, las = 1, cex = 1, xpd = NA, adj = 0),
+  cat.labels.arg = list(x = 0.1, font = 3, las = 1, cex = 0.95, col = gray(0.4), xpd =
+    NA, adj = 0),
+  N.values.arg = list(x = 0.5, col = gray(0.4), xpd = NA),
+  O.values.arg = list(x = 0.675, col = gray(0.4), xpd = NA),
+  E.values.arg = list(x = 0.85, col = gray(0.4), xpd = NA),
   NOE.head.arg = list(font = 2, labels = c("N", "O", "E"), xpd = NA),
   Overall.seg.arg = list(col = "navyblue", xpd = NA, lwd = 2),
-  Overall.p.arg = list(pch = 23, cex = 2, col = "black", bg = gray(0.4),
-  xpd = NA), Overall.est.arg = list(x = smr.xlim[1] - 0.06, las = 1, font
-  = 2, xpd = NA, adj = 1), cat.seg.arg = list(col = "navyblue", xpd = NA,
-  lwd = 2), cat.p.arg = list(pch = 22, cex = 1, col = "black", bg =
-  gray(0.4), xpd = NA), cat.est.arg = list(x = smr.xlim[1] - 0.06, las =
-  1, col = gray(0.4), xpd = NA, adj = 1), SMR.head.arg = list(smr.xlim[1]
-  - 0.06, font = 2, labels = "SMR [95\% CIs]", xpd = NA, adj = 1),
-  smr.xlab = "Standardized Mortality Ratio", smr.xlim = "auto",
-  grid = TRUE, digits = 3)
+  Overall.p.arg = list(pch = 23, cex = 2, col = "black", bg = gray(0.4), xpd = NA),
+  Overall.est.arg = list(x = smr.xlim[1] - 0.06, las = 1, font = 2, xpd = NA, adj = 1),
+  cat.seg.arg = list(col = "navyblue", xpd = NA, lwd = 2),
+  cat.p.arg = list(pch = 22, cex = 1, col = "black", bg = gray(0.4), xpd = NA),
+  cat.est.arg = list(x = smr.xlim[1] - 0.06, las = 1, col = gray(0.4), xpd = NA, adj =
+    1),
+  SMR.head.arg = list(smr.xlim[1] - 0.06, font = 2, labels = "SMR [95\% CIs]", xpd =
+    NA, adj = 1),
+  smr.xlab = "Standardized Mortality Ratio",
+  smr.xlim = "auto",
+  grid = TRUE,
+  digits = 3
+)
 }
 \arguments{
 \item{obs.var}{Observed death. Accepted values are 0 (absence) or 1 (presence) in a vector. For \code{SMR.table} it must be a character indicating the name of the variable in the data.}

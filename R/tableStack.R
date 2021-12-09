@@ -755,8 +755,8 @@ tableStack <- function (vars, dataFrame, minlevel = "auto", maxlevel = "auto", c
         }
         else {
           b <- 0
-          term1 <- as.vector(tapply(X = dataFrame[, selected[i]], INDEX = list(by1), FUN = "mean", na.rm = TRUE))
-          term2 <- as.vector(tapply(X = dataFrame[, selected[i]], INDEX = list(by1), FUN = "sd", na.rm = TRUE))
+          term1 <- as.numeric(tapply(X = dataFrame[, selected[i]], INDEX = list(by1), FUN = "mean", na.rm = TRUE))
+          term2 <- as.numeric(tapply(X = dataFrame[, selected[i]], INDEX = list(by1), FUN = "sd", na.rm = TRUE))
           if (total.column) {
             b <- 1
             if (NAcol){

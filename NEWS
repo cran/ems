@@ -1,4 +1,12 @@
 ==============
+ems v1.3.11 (Release date: 2021-12-09)
+
+    Changes:
+
+1- Improvements at the icu dataset documentation.
+2- Changes in functions calcurve, SRU, SRUcalc and tableStack so that the as.vector() method could be replaced by the as.numeric() one, due to a CRAN request.
+
+==============
 ems v1.3.10 (Release date: 2021-02-25)
 
     Changes:

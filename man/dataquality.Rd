@@ -11,30 +11,63 @@
 \alias{rm.unwanted}
 \title{Collection of functions to check data quality in a dataset and remove not valid or extreme values.}
 \usage{
-t_factor(data, variable, legal, var.labels = attr(data,
-  "var.labels")[match(variable, names(data))], digits = 3)
+t_factor(
+  data,
+  variable,
+  legal,
+  var.labels = attr(data, "var.labels")[match(variable, names(data))],
+  digits = 3
+)
 
-factor.table(data, limits, var.labels = attr(data,
-  "var.labels")[match(unlist(sapply(seq_along(limits), function(i)
-  limits[[i]][1])), names(data))], digits = 3)
+factor.table(
+  data,
+  limits,
+  var.labels = attr(data, "var.labels")[match(unlist(sapply(seq_along(limits),
+    function(i) limits[[i]][1])), names(data))],
+  digits = 3
+)
 
-t_num(data, num.var, num.max = 100, num.min = 0,
+t_num(
+  data,
+  num.var,
+  num.max = 100,
+  num.min = 0,
   var.labels = attr(data, "var.labels")[match(num.var, names(data))],
-  digits = 3)
+  digits = 3
+)
 
-num.table(data, num.limits, var.labels = attr(data,
-  "var.labels")[match(num.limits$num.var, names(data))], digits = 3)
+num.table(
+  data,
+  num.limits,
+  var.labels = attr(data, "var.labels")[match(num.limits$num.var, names(data))],
+  digits = 3
+)
 
-t_date(data, date.var, date.max = as.Date("2010-11-30"),
-  date.min = as.Date("2010-01-31"), format.date = "auto", digits = 3,
-  var.labels = attr(data, "var.labels")[match(date.var, names(data))])
+t_date(
+  data,
+  date.var,
+  date.max = as.Date("2010-11-30"),
+  date.min = as.Date("2010-01-31"),
+  format.date = "auto",
+  digits = 3,
+  var.labels = attr(data, "var.labels")[match(date.var, names(data))]
+)
 
-date.table(data, date.limits, format.date = "auto", digits = 3,
-  var.labels = attr(data, "var.labels")[match(date.limits$date.var,
-  names(data))])
+date.table(
+  data,
+  date.limits,
+  format.date = "auto",
+  digits = 3,
+  var.labels = attr(data, "var.labels")[match(date.limits$date.var, names(data))]
+)
 
-rm.unwanted(data, limits = NULL, num.limits = TRUE, try.keep = TRUE,
-  stringAsFactors = TRUE)
+rm.unwanted(
+  data,
+  limits = NULL,
+  num.limits = TRUE,
+  try.keep = TRUE,
+  stringAsFactors = TRUE
+)
 }
 \arguments{
 \item{data}{A data.frame where variables will be tested.}

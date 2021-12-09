@@ -4,16 +4,38 @@
 \alias{tableStack}
 \title{Tabulation of variables in a stack form}
 \usage{
-tableStack(vars, dataFrame, minlevel = "auto", maxlevel = "auto",
-  count = TRUE, na.rm = FALSE, means = TRUE, medians = FALSE,
-  sds = TRUE, decimal = 2, total = TRUE, var.labels = TRUE,
-  var.labels.trunc = 150, reverse = FALSE, vars.to.reverse = NULL,
-  by = NULL, vars.to.factor = NULL, iqr = "auto",
-  prevalence = FALSE, percent = c("column", "row", "none"),
-  frequency = TRUE, test = TRUE, name.test = TRUE,
-  total.column = FALSE, simulate.p.value = FALSE, sample.size = TRUE,
-  assumption.p.value = 0.01, NAcol = FALSE, NArow = FALSE,
-  drplvls = FALSE)
+tableStack(
+  vars,
+  dataFrame,
+  minlevel = "auto",
+  maxlevel = "auto",
+  count = TRUE,
+  na.rm = FALSE,
+  means = TRUE,
+  medians = FALSE,
+  sds = TRUE,
+  decimal = 2,
+  total = TRUE,
+  var.labels = TRUE,
+  var.labels.trunc = 150,
+  reverse = FALSE,
+  vars.to.reverse = NULL,
+  by = NULL,
+  vars.to.factor = NULL,
+  iqr = "auto",
+  prevalence = FALSE,
+  percent = c("column", "row", "none"),
+  frequency = TRUE,
+  test = TRUE,
+  name.test = TRUE,
+  total.column = FALSE,
+  simulate.p.value = FALSE,
+  sample.size = TRUE,
+  assumption.p.value = 0.01,
+  NAcol = FALSE,
+  NArow = FALSE,
+  drplvls = FALSE
+)
 }
 \arguments{
 \item{vars}{a vector of variables in the data frame. The imput may be given with or without quotes.}

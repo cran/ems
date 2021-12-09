@@ -4,9 +4,15 @@
 \alias{mortality_rate}
 \title{Mortality Rate}
 \usage{
-mortality_rate(deaths, period = NULL, isQuarter = FALSE,
-  isYear = FALSE, option = c("both", "monthly", "quarterly", "annual"),
-  periodName = NULL, default_tapply = NA)
+mortality_rate(
+  deaths,
+  period = NULL,
+  isQuarter = FALSE,
+  isYear = FALSE,
+  option = c("both", "monthly", "quarterly", "annual"),
+  periodName = NULL,
+  default_tapply = NA
+)
 }
 \arguments{
 \item{deaths}{a numerical vector that only contains 0 and 1, indicating whether the patient was alive or dead, respectively.}

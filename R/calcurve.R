@@ -214,12 +214,12 @@ calcurve <- function(deaths, pred,
     categories_labels <- unique(categories_labels)
     df <- data.frame(row.names = 1:length(categories_labels),
                      'categories' = categories_labels,
-                     'n' = as.vector(table(categories)),
+                     'n' = as.numeric(table(categories)),
                      obs_rate_by_cat,
                      pred_rate_by_cat)
   }else{
     df <- data.frame(row.names = 1:10, 'categories' = names(table(categories)),
-                     'n' = as.vector(table(categories)), obs_rate_by_cat,
+                     'n' = as.numeric(table(categories)), obs_rate_by_cat,
                      pred_rate_by_cat)
 
   }

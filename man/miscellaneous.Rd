@@ -23,16 +23,34 @@ tab2tex(x, nc = ncol(x))
 
 trunc_num(x, min, max, toNA = FALSE)
 
-dummy.columns(data, original.column, factors, scan.oc = FALSE,
-  sep = ",", colnames.add = "Dummy.", min.events = NULL,
-  rm.oc = FALSE, warn = FALSE, return.factor = TRUE)
+dummy.columns(
+  data,
+  original.column,
+  factors,
+  scan.oc = FALSE,
+  sep = ",",
+  colnames.add = "Dummy.",
+  min.events = NULL,
+  rm.oc = FALSE,
+  warn = FALSE,
+  return.factor = TRUE
+)
 
-rm.dummy.columns(data, colnames, event = "1", min.events = 50,
-  warn = FALSE)
+rm.dummy.columns(data, colnames, event = "1", min.events = 50, warn = FALSE)
 
-funnelEstimate(y, range, u, totalAdmissions, totalObserved, p = 0.95,
-  theta = 1, overdispersion = TRUE, dist = c("binomial", "normal",
-  "poisson"), rho, gdetheta)
+funnelEstimate(
+  y,
+  range,
+  u,
+  totalAdmissions,
+  totalObserved,
+  p = 0.95,
+  theta = 1,
+  overdispersion = TRUE,
+  dist = c("binomial", "normal", "poisson"),
+  rho,
+  gdetheta
+)
 
 winsorising(z_score, u)
 }

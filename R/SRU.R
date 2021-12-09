@@ -329,7 +329,7 @@ SRU <- function(prob, death, unit, los, los.exp, class, score, plot = FALSE, typ
   unit_admissions = apply(unit_death,1,sum)
 
   output <- list(
-    LOS.surv = data.frame(row.names=NULL,labels(total), total, surv, round(as.vector(sum_los), digits2), round(average_days,digits2)),
+    LOS.surv = data.frame(row.names=NULL,labels(total), total, surv, round(as.numeric(sum_los$x), digits2), round(average_days,digits2)),
     estim.eff = data.frame(N.Unit=quant_unit, N.Pat = n.pacients, SMR = paste(format(smr.mean,digits = digits, nsmall = digits), " ",
                                                                               "(", format(smr.sd,digits = digits, nsmall = digits),")", sep=""), SRU=paste(format(sru.mean, digits = digits, nsmall = digits)," ","(",format(sru.sd,digits = digits,nsmall = digits),")", sep = "")),
     rates = rates,
@@ -554,7 +554,7 @@ SRUcalc <- function(prob, death, unit, los, score, digits = 2){
     unit_death <- table(dt$unit,dt$death)
     warning(paste(c("The following units were excluded due to absence of survivals:", exc), collapse = ", "))
   }
-  admissions <- as.vector(table(dt$unit))
+  admissions <- as.numeric(table(dt$unit))
   average_days <- matrix(c(2.3,3.2,4.3,7.2,11,16.6,22.2,29.4,39), ncol = 1)
   unit_class <- data.frame(dt$unit, dt$class, dt$death)
   unit_class <- unit_class[-which(unit_class$dt.death == 1),]

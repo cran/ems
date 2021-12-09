@@ -5,7 +5,6 @@
 #' \itemize{
 #'   \item \code{Unit} The name of the ICU unit.
 #'   \item \code{Age} Patient age.
-#'   \item \code{Gender} Male = 1, Female = 0
 #'   \item \code{UnitAdmissionDateTime} ICU unit admission date and time.
 #'   \item \code{UnitDischargeDateTime} ICU unit discharge date and time.
 #'   \item \code{UnitDischargeName} Unit admission outcome. Death = 1, or Discharge = 0.
@@ -23,6 +22,7 @@
 #'   \item \code{Saps3Points} SAPS 3 score
 #'   \item \code{Saps3DeathProbabilityStandardEquation} SAPS 3 estimated probability
 #'   \item \code{SofaScore} SOFA score.
+#'   \item \code{los} Unit length of stay, that is, the time difference between \code{UnitAdmissionDateTime} and \code{UnitDischargeDateTime}, in days.
 #' }
 #'
 #' @format A data frame with 13709 rows and 24 variables

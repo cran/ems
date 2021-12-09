@@ -4,7 +4,9 @@
 \name{icu}
 \alias{icu}
 \title{Data from ICU admissions.}
-\format{A data frame with 13709 rows and 24 variables}
+\format{
+A data frame with 13709 rows and 24 variables
+}
 \source{
 Organizational characteristics, outcomes, and resource use in 78 Brazilian intensive care units: the ORCHESTRA study. Intensive Care Med. 2015 Dec;41(12):2149-60.
 }
@@ -18,7 +20,6 @@ A dataset containing selected data from some ICU (intensive care units) admissio
 \itemize{
   \item \code{Unit} The name of the ICU unit.
   \item \code{Age} Patient age.
-  \item \code{Gender} Male = 1, Female = 0
   \item \code{UnitAdmissionDateTime} ICU unit admission date and time.
   \item \code{UnitDischargeDateTime} ICU unit discharge date and time.
   \item \code{UnitDischargeName} Unit admission outcome. Death = 1, or Discharge = 0.
@@ -36,6 +37,7 @@ A dataset containing selected data from some ICU (intensive care units) admissio
   \item \code{Saps3Points} SAPS 3 score
   \item \code{Saps3DeathProbabilityStandardEquation} SAPS 3 estimated probability
   \item \code{SofaScore} SOFA score.
+  \item \code{los} Unit length of stay, that is, the time difference between \code{UnitAdmissionDateTime} and \code{UnitDischargeDateTime}, in days.
 }
 }
 \keyword{datasets}
